@@ -7,7 +7,10 @@ import {
   Image,
   ImageStyle
 } from "react-native";
+import { NavigationScreenProps, HeaderBackButton } from "react-navigation";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors } from "theme";
+import { getNavigationKey } from "lib";
 import chats from "mocks/chats.json";
 
 class ChatRoom extends React.Component {
@@ -116,5 +119,50 @@ class ChatRoom extends React.Component {
     );
   }
 }
+
+export const ChatRoomScreen = {
+  screen: ChatRoom,
+  navigationOptions: ({ navigation }: NavigationScreenProps) => {
+    const styles = StyleSheet.create({
+      container: {
+        flexDirection: "row",
+        alignItems: "center"
+      },
+      title: {
+        fontSize: 24,
+        fontWeight: "bold"
+      },
+      subtitle: {
+        color: colors.gray
+      }
+    });
+
+    return {
+      headerLeft: (
+        <View style={styles.container}>
+          <HeaderBackButton
+            onPress={() =>
+              navigation.navigate(getNavigationKey(["chat", "home"]))
+            }
+          />
+          <View>
+            <Text style={styles.title}>John</Text>
+            <Text style={styles.subtitle}>새벽 3:44</Text>
+          </View>
+        </View>
+      ),
+      headerRight: (
+        <View style={{ ...(styles.container as object), marginRight: 16 }}>
+          <MaterialCommunityIcons
+            name="magnify"
+            size={32}
+            style={{ marginRight: 16 }}
+          />
+          <MaterialCommunityIcons name="settings" size={32} />
+        </View>
+      )
+    };
+  }
+};
 
 export default ChatRoom;

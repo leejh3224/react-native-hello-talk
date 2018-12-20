@@ -31,7 +31,6 @@ class AuthLoading extends React.Component<NavigationScreenProps> {
           width: window.width,
           height: window.height,
           position: "absolute",
-          opacity: 0.4,
           justifyContent: "center",
           alignItems: "center"
         }}
@@ -48,5 +47,12 @@ class AuthLoading extends React.Component<NavigationScreenProps> {
     );
   }
 }
+
+export const AuthLoadingScreen = {
+  screen: AuthLoading,
+  navigationOptions: {
+    header: null
+  }
+};
 
 export default AuthLoading;

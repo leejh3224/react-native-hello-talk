@@ -10,6 +10,7 @@ import {
 import { Google, Constants } from "expo";
 import * as firebase from "firebase";
 import { NavigationScreenProps } from "react-navigation";
+import Toast from "react-native-easy-toast";
 import { getNavigationKey } from "lib";
 import { colors } from "theme";
 import helloTalkImage from "../../../assets/images/hello-talk.png";
@@ -46,6 +47,8 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
       }
     } catch (error) {
       console.log(error);
+      // react-native-easy-toast does not provide @types
+      (this.refs.errorToast as any).show(error.message);
     }
   };
 
@@ -75,7 +78,16 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
               alignItems: "center",
               padding: 16,
               backgroundColor: colors.white,
-              borderRadius: 10
+              borderRadius: 10,
+              // shadow
+              shadowColor: colors.black,
+              shadowOffset: {
+                width: 0,
+                height: 3
+              },
+              shadowOpacity: 0.27,
+              shadowRadius: 4.65,
+              elevation: 6
             }}
           >
             <Image
@@ -86,10 +98,22 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
               구글 계정으로 로그인하기
             </Text>
           </TouchableOpacity>
+          <Toast
+            ref="errorToast"
+            style={{ backgroundColor: colors.warning, paddingHorizontal: 16 }}
+            textStyle={{ color: colors.white, fontSize: 18 }}
+          />
         </View>
       </ImageBackground>
     );
   }
 }
+
+export const AuthLoginScreen = {
+  screen: AuthLogin,
+  navigationOptions: {
+    header: null
+  }
+};
 
 export default AuthLogin;

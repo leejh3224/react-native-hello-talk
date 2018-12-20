@@ -10,9 +10,11 @@ import {
   TouchableOpacity,
   ImageStyle
 } from "react-native";
+import { NavigationScreenProps } from "react-navigation";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import users from "mocks/users.json";
 import { colors } from "theme";
+import { getNavigationKey } from "lib";
 import { User } from "store/types/User";
 
 interface ChatCreateState {
@@ -222,5 +224,27 @@ class ChatCreate extends React.Component<{}, ChatCreateState> {
     );
   }
 }
+
+export const ChatCreateScreen = {
+  screen: ChatCreate,
+  navigationOptions: ({ navigation }: NavigationScreenProps) => ({
+    title: "create",
+    headerRight: (
+      <TouchableOpacity
+        onPress={() => navigation.navigate(getNavigationKey(["chat", "room"]))}
+      >
+        <Text
+          style={{
+            marginRight: 16,
+            fontSize: 20,
+            fontWeight: "bold"
+          }}
+        >
+          OK
+        </Text>
+      </TouchableOpacity>
+    )
+  })
+};
 
 export default ChatCreate;
