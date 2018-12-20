@@ -1,0 +1,56 @@
+{
+	"compilerOptions": {
+		// Target latest version of ECMAScript.
+		"target": "esnext",
+		// Search under node_modules for non-relative imports.
+		"moduleResolution": "node",
+		// Process & infer types from .js files.
+		"allowJs": false,
+		// Don't emit; allow Babel to transform files.
+		"noEmit": true,
+		// Enable strictest settings like strictNullChecks & noImplicitAny.
+		"strict": true,
+		// Disallow features that require cross-file information for emit.
+		"isolatedModules": true,
+		// Import non-ES modules as default imports.
+		"esModuleInterop": true,
+
+		"resolveJsonModule": true,
+
+		"jsx": "react-native",
+		"sourceMap": true,
+		"rootDir": "src",
+		"baseUrl": "./src",
+
+		"noImplicitAny": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"importHelpers": true,
+		"alwaysStrict": true,
+		"forceConsistentCasingInFileNames": true,
+		"strictFunctionTypes": true,
+		"noFallthroughCasesInSwitch": true,
+		"strictNullChecks": true,
+		"allowSyntheticDefaultImports": true,
+		"lib": ["es7", "dom"],
+		"paths": {
+			"*": ["*", "*.ios", "*.android"]
+		}
+	},
+	"filesGlob": [
+		"typings/index.d.ts",
+		"src/**/*.ts",
+		"src/**/*.tsx",
+		"node_modules/typescript/lib/lib.es6.d.ts"
+	],
+	"include": ["src/**/*"],
+	"exclude": [
+		"build",
+		"node_modules",
+		"jest.config.js",
+		"src/App.js"
+	],
+	"types": ["react", "react-native", "src/typings"]
+}

@@ -1,0 +1,17 @@
+{
+    "extends": ["tslint:recommended", "tslint-config-prettier"],
+    "rules": {
+        "missing-jsdoc": false,
+        "newline-before-return": false,
+        "no-return-await": true,
+        "object-literal-sort-keys": false,
+        "interface-name": false,
+        "no-console": false,
+        "no-empty": false,
+        "ordered-imports": false,
+        "member-access": false
+    },
+    "linterOptions": {
+        "exclude": ["node_modules", "./src/setupTests.ts"]
+    }
+}
