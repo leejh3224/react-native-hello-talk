@@ -15,9 +15,18 @@ class AuthLoading extends React.Component<NavigationScreenProps> {
     const { currentUser } = firebase.auth();
     const { navigation } = this.props;
 
-    navigation.navigate(
+    // TODO: remove development setting
+    if (process.env.NODE_ENV === "development") {
+      return navigation.navigate(
+        currentUser
+          ? getNavigationKey(["auth", "login"])
+          : getNavigationKey(["chat", "home"])
+      );
+    }
+
+    return navigation.navigate(
       currentUser
-        ? getNavigationKey(["auth", "app"])
+        ? getNavigationKey(["chat", "home"])
         : getNavigationKey(["auth", "login"])
     );
   };
@@ -49,10 +58,7 @@ class AuthLoading extends React.Component<NavigationScreenProps> {
 }
 
 export const AuthLoadingScreen = {
-  screen: AuthLoading,
-  navigationOptions: {
-    header: null
-  }
+  screen: AuthLoading
 };
 
 export default AuthLoading;

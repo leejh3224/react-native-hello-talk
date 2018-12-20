@@ -9,8 +9,8 @@ import { Constants } from "expo";
 import { MenuProvider } from "react-native-popup-menu";
 import { Provider } from "react-redux";
 import { ChatScreen, FeedScreen, AuthScreen } from "screens";
-import configureStore from "./store";
-import { colors } from "./theme";
+import configureStore from "store";
+import { colors } from "theme";
 
 firebase.initializeApp(Constants.manifest.extra!.firebaseConfig);
 

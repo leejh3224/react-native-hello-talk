@@ -18,8 +18,17 @@ import helloTalkImage from "../../../assets/images/hello-talk.png";
 const window = Dimensions.get("window");
 
 class AuthLogin extends React.Component<NavigationScreenProps> {
+  state = {
+    loginInProgress: false
+  };
+
   signIn = async () => {
     try {
+      this.setState(prev => ({
+        ...prev,
+        loginInProgress: true
+      }));
+
       /**
        * To suppress Property 'idToken'/'accessToken' does not exist on type 'LogInResult',
        * cast its type as any
@@ -43,16 +52,24 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
       const { navigation } = this.props;
 
       if (user) {
-        navigation.navigate(getNavigationKey(["auth", "app"]));
+        navigation.navigate(getNavigationKey(["chat", "home"]));
       }
     } catch (error) {
       console.log(error);
+
+      this.setState(prev => ({
+        ...prev,
+        loginInProgress: false
+      }));
+
       // react-native-easy-toast does not provide @types
       (this.refs.errorToast as any).show(error.message);
     }
   };
 
   render() {
+    const { loginInProgress } = this.state;
+
     return (
       <ImageBackground
         source={helloTalkImage}
@@ -73,6 +90,7 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
         >
           <TouchableOpacity
             onPress={this.signIn}
+            disabled={loginInProgress}
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -110,10 +128,7 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
 }
 
 export const AuthLoginScreen = {
-  screen: AuthLogin,
-  navigationOptions: {
-    header: null
-  }
+  screen: AuthLogin
 };
 
 export default AuthLogin;

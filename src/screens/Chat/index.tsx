@@ -1,5 +1,5 @@
 import { createStackNavigator } from "react-navigation";
-import { getNavigationKey } from "lib";
+import { getNavigationKey, globalHeaderConfig } from "lib";
 import { ChatHomeScreen } from "./home";
 import { ChatRoomScreen } from "./room";
 import { ChatCreateScreen } from "./create";
@@ -16,10 +16,6 @@ export default createStackNavigator(
   },
   {
     initialRouteName: home,
-    navigationOptions: () => ({
-      headerStyle: {
-        height: 68
-      }
-    })
+    navigationOptions: globalHeaderConfig
   }
 );
