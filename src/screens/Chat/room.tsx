@@ -25,7 +25,7 @@ class ChatRoom extends React.Component {
         marginHorizontal: 16
       },
       messageContainer: {
-        backgroundColor: "white",
+        backgroundColor: colors.white,
         borderRadius: 20,
         alignSelf: "flex-start",
         paddingVertical: 8,
@@ -88,7 +88,7 @@ class ChatRoom extends React.Component {
         alignSelf: "flex-start"
       },
       timestamp: {
-        color: "white",
+        color: colors.white,
         fontSize: 16,
         textAlign: "center"
       }

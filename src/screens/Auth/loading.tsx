@@ -3,6 +3,7 @@ import { Text, ImageBackground, Dimensions } from "react-native";
 import * as firebase from "firebase";
 import { NavigationScreenProps } from "react-navigation";
 import { getNavigationKey } from "lib";
+import { colors } from "theme";
 
 class AuthLoading extends React.Component<NavigationScreenProps> {
   constructor(props: any) {
@@ -38,7 +39,7 @@ class AuthLoading extends React.Component<NavigationScreenProps> {
         <Text
           style={{
             fontSize: 32,
-            color: "white"
+            color: colors.white
           }}
         >
           Loading user...

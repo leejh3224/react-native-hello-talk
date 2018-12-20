@@ -74,7 +74,7 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
               flexDirection: "row",
               alignItems: "center",
               padding: 16,
-              backgroundColor: "white",
+              backgroundColor: colors.white,
               borderRadius: 10
             }}
           >

@@ -48,7 +48,7 @@ class ChatCreate extends React.Component<{}, ChatCreateState> {
         flex: 1,
         flexDirection: "row",
         padding: 16,
-        backgroundColor: "white",
+        backgroundColor: colors.white,
         borderBottomColor: colors.gray,
         borderBottomWidth: 0.5
       },
@@ -94,7 +94,11 @@ class ChatCreate extends React.Component<{}, ChatCreateState> {
         >
           {selected.includes(item) && (
             <View style={styles.overlay}>
-              <MaterialCommunityIcons name="check" size={32} color="white" />
+              <MaterialCommunityIcons
+                name="check"
+                size={32}
+                color={colors.white}
+              />
             </View>
           )}
         </ImageBackground>
@@ -139,14 +143,14 @@ class ChatCreate extends React.Component<{}, ChatCreateState> {
       selectedPeopleContainer: {
         flexDirection: "row",
         padding: 16,
-        backgroundColor: "white",
+        backgroundColor: colors.white,
         borderBottomColor: colors.gray,
         borderBottomWidth: 0.5
       },
       input: {
         fontSize: 20,
         padding: 16,
-        backgroundColor: "white",
+        backgroundColor: colors.white,
         borderBottomColor: colors.gray,
         borderBottomWidth: 0.5
       },
@@ -187,7 +191,11 @@ class ChatCreate extends React.Component<{}, ChatCreateState> {
                 style={styles.badge}
                 onPress={() => this.handleSelectRow(user)}
               >
-                <MaterialCommunityIcons name="minus" size={20} color="white" />
+                <MaterialCommunityIcons
+                  name="minus"
+                  size={20}
+                  color={colors.white}
+                />
               </TouchableOpacity>
             </ImageBackground>
           ))}

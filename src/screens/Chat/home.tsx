@@ -17,6 +17,7 @@ import {
 } from "react-native-popup-menu";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { getNavigationKey } from "lib";
+import { colors } from "theme";
 import chats from "mocks/chats.json";
 
 class ChatHome extends React.Component<NavigationScreenProps, {}> {
@@ -26,7 +27,7 @@ class ChatHome extends React.Component<NavigationScreenProps, {}> {
         flex: 1,
         flexDirection: "row",
         padding: 16,
-        backgroundColor: "white"
+        backgroundColor: colors.white
       },
       profileImage: {
         width: 60,
