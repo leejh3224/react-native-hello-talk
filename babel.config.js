@@ -3,7 +3,8 @@ module.exports = function(api) {
   return {
     presets: [
       'babel-preset-expo',
-      "@babel/preset-typescript"
+      "@babel/preset-typescript",
+      "module:react-native-dotenv"
     ],
     plugins: [
       ["module-resolver", {

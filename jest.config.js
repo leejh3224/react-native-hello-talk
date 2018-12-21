@@ -6,7 +6,7 @@ module.exports = {
 	},
 	testMatch: ['**/*.test.ts?(x)'],
 	setupTestFrameworkScriptFile: '<rootDir>/src/setupTests.ts',
-	roots: ['<rootDir>/src/screens'],
+	roots: ['<rootDir>/src'],
 	modulePathIgnorePatterns: ['<rootDir>/.jest'],
 	collectCoverageFrom: ['src/**/*.{ts|tsx}', 'src/setupTests.ts'],
 	cacheDirectory: '<rootDir>/.jest',

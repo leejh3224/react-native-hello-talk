@@ -22,7 +22,10 @@ interface ChatCreateState {
   keyword: string;
 }
 
-class ChatCreate extends React.Component<{}, ChatCreateState> {
+class ChatCreate extends React.Component<
+  NavigationScreenProps,
+  ChatCreateState
+> {
   state = {
     // typescript infers elements of empty array as never
     // so we have to manually cast type[]
@@ -32,6 +35,7 @@ class ChatCreate extends React.Component<{}, ChatCreateState> {
 
   handleSelectRow = (user: User) => {
     const { selected } = this.state;
+    const { navigation } = this.props;
 
     // filter out user if he already exists in the queue
     // otherwise push him into the queue
@@ -43,6 +47,9 @@ class ChatCreate extends React.Component<{}, ChatCreateState> {
       ...prev,
       selected: newUsers
     }));
+
+    // pass selected user to header: ok button
+    navigation.setParams({ selected: newUsers });
   };
   handleRenderRow = ({ item }: { item: User }) => {
     const styles = StyleSheet.create({
@@ -227,24 +234,31 @@ class ChatCreate extends React.Component<{}, ChatCreateState> {
 
 export const ChatCreateScreen = {
   screen: ChatCreate,
-  navigationOptions: ({ navigation }: NavigationScreenProps) => ({
-    title: "create",
-    headerRight: (
-      <TouchableOpacity
-        onPress={() => navigation.navigate(getNavigationKey(["chat", "room"]))}
-      >
-        <Text
-          style={{
-            marginRight: 16,
-            fontSize: 20,
-            fontWeight: "bold"
-          }}
+  navigationOptions: ({ navigation }: NavigationScreenProps) => {
+    const selected = navigation.getParam("selected", []) as User[];
+
+    return {
+      title: "create",
+      headerRight: (
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate(getNavigationKey(["chat", "room"]))
+          }
+          disabled={selected.length <= 0}
         >
-          OK
-        </Text>
-      </TouchableOpacity>
-    )
-  })
+          <Text
+            style={{
+              marginRight: 16,
+              fontSize: 20,
+              fontWeight: "bold"
+            }}
+          >
+            OK {selected.length > 0 && `(${selected.length})`}
+          </Text>
+        </TouchableOpacity>
+      )
+    };
+  }
 };
 
 export default ChatCreate;

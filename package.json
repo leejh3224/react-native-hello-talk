@@ -7,7 +7,7 @@
 		"android": "expo start --android",
 		"ios": "REACT_DEBUGGER=\"rndebugger-open --open --port 19001\" expo start --ios --localhost",
 		"eject": "expo eject",
-		"test": "jest --watchAll --verbose",
+		"test": "jest --watch --maxWorkers 4",
 		"report": "jest --coverage"
 	},
 	"dependencies": {
@@ -44,6 +44,7 @@
 		"@types/react-navigation": "2.13.0",
 		"@types/react-redux": "^6.0.11",
 		"@types/react-test-renderer": "^16.0.3",
+		"@types/uuid": "^3.4.4",
 		"babel-core": "^7.0.0-bridge.0",
 		"babel-plugin-module-resolver": "^3.1.1",
 		"babel-preset-expo": "^5.0.0",
@@ -54,6 +55,9 @@
 		"jest-expo": "^31.0.0",
 		"jsdom": "^13.1.0",
 		"react-native-debugger-open": "^0.3.17",
+		"react-native-dotenv": "^0.2.0",
+		"react-test-renderer": "^16.7.0",
+		"redux-saga-test-plan": "^3.7.0",
 		"tslint": "^5.11.0",
 		"tslint-config-prettier": "^1.15.0",
 		"typescript": "^3.1.6"

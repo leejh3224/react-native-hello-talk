@@ -34,7 +34,7 @@ const getNavigationKey = (path: string[]) => {
     }
   };
 
-  // TODO: use dfs to get all keys	   return get(navigationKeys, path);
+  // TODO: use dfs to get all keys
   const availableKeys = [
     "auth",
     "loading",
@@ -51,6 +51,7 @@ const getNavigationKey = (path: string[]) => {
     return get(navigationKeys, path);
   } else {
     console.log("key not found");
+    return null;
   }
 };
 

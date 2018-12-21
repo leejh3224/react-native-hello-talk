@@ -4,11 +4,21 @@ import users from "mocks/users.json";
 import Create from "./create";
 import { TextInput } from "react-native";
 
+let wrapper: any = null;
+
+beforeAll(() => {
+  // mock navigation
+  const navigation = {
+    setParams: jest.fn()
+  };
+
+  wrapper = shallow(<Create navigation={navigation as any} />);
+});
+
 it(`
     should add new user into state:users 
     if he's not already in queue.
     Otherwise remove him from the queue`, async () => {
-  const wrapper = shallow(<Create />);
   const instance: any = wrapper.instance();
 
   // add user
@@ -23,7 +33,6 @@ it(`
 it(`
     should show users with 'languageWantToLearn' or 'name'
     that matches state:keyword`, () => {
-  const wrapper = shallow(<Create />);
   const textInput = wrapper.find(TextInput);
   const instance: any = wrapper.instance();
 

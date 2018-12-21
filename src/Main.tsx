@@ -4,15 +4,12 @@ import {
   createStackNavigator
 } from "react-navigation";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import * as firebase from "firebase";
-import { Constants } from "expo";
 import { MenuProvider } from "react-native-popup-menu";
 import { Provider } from "react-redux";
 import { ChatScreen, FeedScreen, AuthScreen } from "screens";
 import configureStore from "store";
 import { colors } from "theme";
-
-firebase.initializeApp(Constants.manifest.extra!.firebaseConfig);
+import "lib/initFirebase";
 
 const MainFlow = createBottomTabNavigator(
   {

@@ -13,7 +13,11 @@ coverage
 
 build
 
+# app credentials
 app.json
+
+# secrets
+.env
 
 yarn-error.log
 

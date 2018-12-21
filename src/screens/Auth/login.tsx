@@ -7,12 +7,11 @@ import {
   Text,
   Image
 } from "react-native";
-import { Google, Constants } from "expo";
-import * as firebase from "firebase";
 import { NavigationScreenProps } from "react-navigation";
 import Toast from "react-native-easy-toast";
 import { getNavigationKey } from "lib";
 import { colors } from "theme";
+import api from "api";
 import helloTalkImage from "../../../assets/images/hello-talk.png";
 
 const window = Dimensions.get("window");
@@ -29,25 +28,7 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
         loginInProgress: true
       }));
 
-      /**
-       * To suppress Property 'idToken'/'accessToken' does not exist on type 'LogInResult',
-       * cast its type as any
-       * TODO: fix any type
-       */
-      const { idToken, accessToken }: any = await Google.logInAsync({
-        iosClientId: Constants.manifest.extra!.googleOAuth.iOSClientId,
-        scopes: ["profile", "email"],
-        behavior: "web"
-      });
-
-      const credential = firebase.auth.GoogleAuthProvider.credential(
-        idToken,
-        accessToken
-      );
-
-      const user = await firebase
-        .auth()
-        .signInAndRetrieveDataWithCredential(credential);
+      const user = await api.googleOAuth();
 
       const { navigation } = this.props;
 

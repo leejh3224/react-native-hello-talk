@@ -7,5 +7,5 @@ export interface Message {
 }
 
 interface Read {
-  [key: string]: boolean;
+  [key: string]: boolean | undefined;
 }

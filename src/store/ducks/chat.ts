@@ -1,48 +1,44 @@
-import { ActionType, createAsyncAction } from "typesafe-actions";
-import * as firebase from "firebase";
-import { put, takeLatest } from "redux-saga/effects";
-import uuid from "uuid/v4";
+import { ActionType, createAsyncAction, getType } from "typesafe-actions";
+import { call, put, takeLatest } from "redux-saga/effects";
 import { withPrefix } from "store/utils";
-import { Chat } from "store/types/Chat";
+import api from "api";
+import { Chat } from "models/Chat";
+import { User } from "models/User";
 
 const createRoom = createAsyncAction(
   withPrefix("CREATE_ROOM_REQUEST"),
   withPrefix("CREATE_ROOM_SUCCESS"),
   withPrefix("CREATE_ROOM_FAILURE")
-)<string[], void, Error>();
+)<string[], Chat, Error>();
 
 export const reducer = (
   state: Chat[] = [],
-  { type, payload }: ActionType<typeof createRoom>
+  action: ActionType<typeof createRoom>
 ) => {
-  switch (type) {
-    case [createRoom.success().type]:
-      return [...state, payload];
+  switch (action.type) {
+    case getType(createRoom.success):
+      return [...state, action.payload];
     default:
       return state;
   }
 };
 
-function* createRoomSaga(people: string[]) {
+export function* createRoomSaga(people: User[]) {
   try {
-    const id = uuid();
+    const newChat = {
+      owner: "",
+      participants: people.map(person => person.id),
+      messages: []
+    };
 
-    yield firebase
-      .database()
-      .ref(`chats/${id}`)
-      .set({
-        id,
-        owner: "",
-        participants: [people],
-        messages: []
-      });
+    yield call(api.createChat, newChat);
 
-    yield put(createRoom.success());
+    yield put(createRoom.success(newChat));
   } catch (error) {
     yield put(createRoom.failure(error));
   }
 }
 
 export function* saga() {
-  yield takeLatest(createRoom.request([]).type as any, createRoomSaga);
+  yield takeLatest(getType(createRoom.request) as any, createRoomSaga);
 }

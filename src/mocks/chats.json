@@ -1,27 +1,27 @@
 [
-  {
-    "id": "db3939b663ef5db1",
-    "owner": "d5643d36588f4fdb",
-    "participants": ["9bfa9384916f8bd4"],
-    "messages": [
-      {
-        "id": "c27c847838476125",
-        "sender": "9bfa9384916f8bd4",
-        "message": "Hi, there?",
-        "timestamp": "2018.12.15 15:04",
-        "read": {
-          "d5643d36588f4fdb": "false"
-        }
-      },
-      {
-        "id": "f4e8be594a782a7c",
-        "sender": "d5643d36588f4fdb",
-        "message": "Yep, how's it going?",
-        "timestamp": "2018.12.15 16:04",
-        "read": {
-          "9bfa9384916f8bd4": "false"
-        }
-      }
-    ]
-  }
+	{
+		"id": "db3939b663ef5db1",
+		"owner": "d5643d36588f4fdb",
+		"participants": ["9bfa9384916f8bd4"],
+		"messages": [
+			{
+				"id": "c27c847838476125",
+				"sender": "9bfa9384916f8bd4",
+				"message": "Hi, there?",
+				"timestamp": "2018.12.15 15:04",
+				"read": {
+					"d5643d36588f4fdb": false
+				}
+			},
+			{
+				"id": "f4e8be594a782a7c",
+				"sender": "d5643d36588f4fdb",
+				"message": "Yep, how's it going?",
+				"timestamp": "2018.12.15 16:04",
+				"read": {
+					"9bfa9384916f8bd4": false
+				}
+			}
+		]
+	}
 ]
