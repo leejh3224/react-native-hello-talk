@@ -1,6 +1,6 @@
 import { createStore, compose, applyMiddleware } from "redux";
 import createSagaMiddleware from "redux-saga";
-import { rootReducer, rootSaga } from "./ducks";
+import { rootReducer, rootSaga } from "./modules";
 
 const composeEnhancers =
   ((window as any) && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||

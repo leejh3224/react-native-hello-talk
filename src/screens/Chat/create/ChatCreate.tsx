@@ -14,8 +14,7 @@ import { NavigationScreenProps } from "react-navigation";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import users from "mocks/users.json";
 import { colors } from "theme";
-import { getNavigationKey } from "lib";
-import { User } from "store/types/User";
+import { User } from "models/User";
 
 interface ChatCreateState {
   selected: User[];
@@ -222,8 +221,11 @@ class ChatCreate extends React.Component<
           placeholder="사용자이름/언어 (예: kr)"
           style={styles.input}
         />
+        {/* TODO: fix manually filtered self */}
         <FlatList<User>
-          data={this.filterByKeyword(users)}
+          data={this.filterByKeyword(
+            users.filter(item => item.id !== "101669882281461678010")
+          )}
           renderItem={this.handleRenderRow}
           keyExtractor={item => item.id}
         />
@@ -231,34 +233,5 @@ class ChatCreate extends React.Component<
     );
   }
 }
-
-export const ChatCreateScreen = {
-  screen: ChatCreate,
-  navigationOptions: ({ navigation }: NavigationScreenProps) => {
-    const selected = navigation.getParam("selected", []) as User[];
-
-    return {
-      title: "create",
-      headerRight: (
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate(getNavigationKey(["chat", "room"]))
-          }
-          disabled={selected.length <= 0}
-        >
-          <Text
-            style={{
-              marginRight: 16,
-              fontSize: 20,
-              fontWeight: "bold"
-            }}
-          >
-            OK {selected.length > 0 && `(${selected.length})`}
-          </Text>
-        </TouchableOpacity>
-      )
-    };
-  }
-};
 
 export default ChatCreate;

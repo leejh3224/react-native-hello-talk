@@ -11,6 +11,7 @@ import { NavigationScreenProps } from "react-navigation";
 import Toast from "react-native-easy-toast";
 import { getNavigationKey } from "lib";
 import { colors } from "theme";
+import * as firebase from "firebase";
 import api from "api";
 import helloTalkImage from "../../../assets/images/hello-talk.png";
 

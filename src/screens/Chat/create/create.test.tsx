@@ -1,8 +1,8 @@
 import * as React from "react";
 import { shallow } from "enzyme";
 import users from "mocks/users.json";
-import Create from "./create";
 import { TextInput } from "react-native";
+import Create from "./ChatCreate";
 
 let wrapper: any = null;
 
@@ -43,8 +43,8 @@ it(`
   expect(filteredUser[0].name).toBe("John");
 
   // filter user by languageWantToLearn
-  textInput.simulate("changeText", "en");
+  textInput.simulate("changeText", "kr");
   filteredUser = instance.filterByKeyword(users);
   expect(filteredUser).toHaveLength(1);
-  expect(filteredUser[0].languageWantToLearn).toBe("en");
+  expect(filteredUser[0].languageWantToLearn).toBe("kr");
 });

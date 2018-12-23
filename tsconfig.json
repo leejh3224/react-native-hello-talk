@@ -34,7 +34,7 @@
 		"noFallthroughCasesInSwitch": true,
 		"strictNullChecks": true,
 		"allowSyntheticDefaultImports": true,
-		"lib": ["es7", "dom"],
+		"lib": ["es2017", "dom"],
 		"paths": {
 			"*": ["*", "*.ios", "*.android"]
 		}
