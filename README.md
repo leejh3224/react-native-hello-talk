@@ -60,22 +60,33 @@ Constants.extra.projectId === 'rn-hello-talk' // use extra field like this!
 ## Features
 
 - Auth
+
   ✅ login using googleOAuth
 
 - Chat
+
   ✅ create new chat
+
   ⬛ list chats belonging to the user
+
   ⬛ support emoji
+
   ⬛ send pictures/videos
+
   ⬛ support translation
 
 - Feed
+
   ⬛ create new feed
+
   ⬛ save images/videos ([firestore](https://firebase.google.com/docs/firestore/))
 
 - Profile
+
   ⬛ logout
 
 - Etc
+
   ⬛ splash screen
+
   ⬛ push messages ([FCM:firebase cloud messaging](https://firebase.google.com/docs/cloud-messaging/))
