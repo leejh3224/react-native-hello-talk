@@ -11,14 +11,6 @@ import configureStore from "store";
 import { colors } from "theme";
 import "lib/initFirebase";
 
-/**
- * displayName: "Junhyung Lee"
- * email:"junhyung3224@gmail.com"
- * phoneNumber:null
- * photoURL: "https://lh3.googleusercontent.com/-jX6pEsnoX6U/AAAAAAAAAAI/AAAAAAAAAAA/AKxrwcZqFNZk_xNJ50neu8X-SoNC_m6Ddw/s96-c/photo.jpg"
- * providerId: "google.com"
- * uid: "101669882281461678010"
- */
 const MainFlow = createBottomTabNavigator(
   {
     Chat: ChatScreen,
@@ -43,7 +35,12 @@ const MainFlow = createBottomTabNavigator(
             color={tintColor}
           />
         );
-      }
+      },
+      tabBarVisible: (() => {
+        const { ui } = store.getState();
+
+        return ui.bottomTabBarVisible;
+      })()
     }),
     tabBarOptions: {
       activeTintColor: colors.primary,

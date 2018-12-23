@@ -6,7 +6,6 @@ import {
 } from "typesafe-actions";
 import { eventChannel } from "redux-saga";
 import { fork, take, call, put, takeLatest } from "redux-saga/effects";
-import * as firebase from "firebase";
 import { withPrefix } from "store/utils";
 import api from "api";
 import { Chat } from "models/Chat";
@@ -22,7 +21,7 @@ export const updateChat = createStandardAction(withPrefix("UPDATE_CHAT"))<{
   [id: string]: Chat;
 }>();
 
-type ChatActions = ActionType<typeof createChat | typeof updateChat>;
+export type ChatActions = ActionType<typeof createChat | typeof updateChat>;
 
 export const reducer = (state: Chat[] = [], action: ChatActions) => {
   switch (action.type) {
@@ -56,17 +55,7 @@ export function* createChatSaga({
 }
 
 export function* updateChatSaga() {
-  const channel = eventChannel(emitter => {
-    const chatsRef = firebase.database().ref("chats");
-
-    chatsRef.on("value", (snapshot: any) => {
-      emitter({ data: snapshot.val() });
-    });
-
-    return () => {
-      chatsRef.off("value");
-    };
-  });
+  const channel = eventChannel(api.listenChatUpdates);
 
   while (true) {
     const { data } = yield take(channel);

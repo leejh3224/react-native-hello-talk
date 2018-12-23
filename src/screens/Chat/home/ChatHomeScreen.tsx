@@ -1,13 +1,5 @@
 import * as React from "react";
-import {
-  FlatList,
-  View,
-  Image,
-  StyleSheet,
-  Text,
-  ImageStyle,
-  TouchableOpacity
-} from "react-native";
+import { StyleSheet, Text } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 import {
   Menu,
@@ -17,69 +9,9 @@ import {
 } from "react-native-popup-menu";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { getNavigationKey } from "lib";
-import { colors } from "theme";
-import chats from "mocks/chats.json";
+import ChatHome from "./ChatHome";
 
-class ChatHome extends React.Component<NavigationScreenProps, {}> {
-  handleRenderRow = () => {
-    const styles = StyleSheet.create({
-      container: {
-        flex: 1,
-        flexDirection: "row",
-        padding: 16,
-        backgroundColor: colors.white
-      },
-      profileImage: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        marginRight: 16
-      },
-      contentContainer: {
-        flex: 1,
-        justifyContent: "center"
-      },
-      title: {
-        fontSize: 24,
-        fontWeight: "bold"
-      },
-      subtitle: {
-        fontSize: 16,
-        color: "gray"
-      }
-    });
-
-    const { navigation } = this.props;
-
-    return (
-      <TouchableOpacity
-        style={styles.container}
-        onPress={() => navigation.navigate(getNavigationKey(["chat", "room"]))}
-      >
-        <Image
-          source={{ uri: "https://r.hswstatic.com/w_907/gif/tesla-cat.jpg" }}
-          style={styles.profileImage as ImageStyle}
-        />
-        <View style={styles.contentContainer}>
-          <Text style={styles.title}>John</Text>
-          <Text style={styles.subtitle}>Hi, there?</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  render() {
-    return (
-      <FlatList
-        data={chats}
-        renderItem={this.handleRenderRow}
-        keyExtractor={item => item.id}
-      />
-    );
-  }
-}
-
-export const ChatHomeScreen = {
+const ChatHomeScreen = {
   screen: ChatHome,
   navigationOptions: ({ navigation }: NavigationScreenProps) => {
     const styles = StyleSheet.create({
@@ -142,4 +74,4 @@ export const ChatHomeScreen = {
   }
 };
 
-export default ChatHome;
+export default ChatHomeScreen;

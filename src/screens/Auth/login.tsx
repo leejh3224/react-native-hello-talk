@@ -31,6 +31,8 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
 
       const user = await api.googleOAuth();
 
+      console.log(firebase.auth().currentUser);
+
       const { navigation } = this.props;
 
       if (user) {

@@ -1,10 +1,8 @@
 import * as React from "react";
 import { Text, TouchableOpacity } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
-import { connect } from "react-redux";
 import { getNavigationKey } from "lib";
 import { User } from "models/User";
-import { createChat } from "store/modules/chat";
 import ChatCreate from "./ChatCreate";
 
 const ChatCreateScreen = {
@@ -12,11 +10,11 @@ const ChatCreateScreen = {
   navigationOptions: ({ navigation }: NavigationScreenProps) => {
     const selected = navigation.getParam("selected", []) as User[];
 
-    const OKButton = ({ createChatRequest }: any) => {
-      return (
+    return {
+      title: "create",
+      headerRight: (
         <TouchableOpacity
           onPress={() => {
-            createChatRequest(selected);
             navigation.navigate(getNavigationKey(["chat", "room"]));
           }}
           disabled={selected.length <= 0}
@@ -31,17 +29,7 @@ const ChatCreateScreen = {
             OK {selected.length > 0 && `(${selected.length})`}
           </Text>
         </TouchableOpacity>
-      );
-    };
-
-    const ConnectedOKButton = connect(
-      null,
-      { createChatRequest: createChat.request }
-    )(OKButton);
-
-    return {
-      title: "create",
-      headerRight: <ConnectedOKButton />
+      )
     };
   }
 };

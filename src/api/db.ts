@@ -18,3 +18,15 @@ export const createChat = (data: Chat) => {
     ...data
   });
 };
+
+export const listenChatUpdates = (emitter: any) => {
+  const chatsRef = db.ref("chats");
+
+  chatsRef.on("value", (snapshot: any) => {
+    emitter({ data: snapshot.val() });
+  });
+
+  return () => {
+    chatsRef.off("value");
+  };
+};

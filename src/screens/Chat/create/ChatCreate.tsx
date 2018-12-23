@@ -138,7 +138,7 @@ class ChatCreate extends React.Component<
 
     return items.filter(item => {
       return toMatch.some(match =>
-        item[match].toLowerCase().includes(keyword.toLowerCase())
+        item[match].toLowerCase().startsWith(keyword.toLowerCase())
       );
     });
   };

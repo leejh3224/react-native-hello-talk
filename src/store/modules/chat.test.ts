@@ -1,4 +1,3 @@
-import { ActionType } from "typesafe-actions";
 import { runSaga } from "redux-saga";
 import chats from "mocks/chats.json";
 import users from "mocks/users.json";

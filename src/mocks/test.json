@@ -1,0 +1,30 @@
+{
+	"chats": {
+		"6acca0c7-6208-4ff6-9496-a6c19e623562": {
+			"lastMessage": "Yeah!",
+			"timestamp": 1459361875666
+		}
+	},
+	"members": {
+		"6acca0c7-6208-4ff6-9496-a6c19e623562": {
+			"john": true,
+			"lee": true
+		}
+	},
+	"lastRead": {
+		"6acca0c7-6208-4ff6-9496-a6c19e623562": {
+			"john": 1459361875666,
+			"lee": 1459361875666
+		}
+	},
+	"messages": {
+		"6acca0c7-6208-4ff6-9496-a6c19e623562": {
+			"chat1": {
+				"sender": "john",
+				"message": "Hi",
+				"timestamp": 1459361875337
+			},
+			"chat2": {}
+		}
+	}
+}

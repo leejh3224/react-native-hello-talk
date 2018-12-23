@@ -125,6 +125,16 @@ assert.deepEqual(dispatched, [
 ])
 ```
 
+## Sharing global state between screens
+
+`React Navigation` provides us with [handy option to share state between screens](https://reactnavigation.org/docs/en/headers.html#updating-navigationoptions-with-setparams).
+
+However, you can't pass props directly to wanted screens.
+
+There are some issues related to this problem like [this one](https://github.com/react-navigation/react-navigation/issues/3787).
+
+So I just used redux and `uiReducer` to handle this problem.
+
 ### reference
 
 - [The best way to test Redux Sagas](https://dev.to/phil/the-best-way-to-test-redux-sagas-4hib)
