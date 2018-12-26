@@ -13,15 +13,14 @@ import { connect } from "react-redux";
 import { getNavigationKey } from "lib";
 import { colors } from "theme";
 import { AppState } from "store/modules";
-import chats from "mocks/chats.json";
+// import chats from "mocks/chats.json";
 import { setBottomTabBarVisibility } from "store/modules/ui";
-
 interface Props extends NavigationScreenProps {
   setBottomTabBarVisibility: typeof setBottomTabBarVisibility;
 }
 
 class ChatHome extends React.Component<Props, {}> {
-  handleRenderRow = () => {
+  handleRenderRow = ({ item }) => {
     const styles = StyleSheet.create({
       container: {
         flex: 1,
@@ -67,25 +66,29 @@ class ChatHome extends React.Component<Props, {}> {
           style={styles.profileImage as ImageStyle}
         />
         <View style={styles.contentContainer}>
-          <Text style={styles.title}>John</Text>
-          <Text style={styles.subtitle}>Hi!</Text>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.subtitle}>
+            {item.lastMessage || "대화를 시작해보세요."}
+          </Text>
         </View>
       </TouchableOpacity>
     );
   };
 
   render() {
+    const { chats } = this.props;
+
     return (
       <FlatList
-        data={chats}
+        data={Object.values(chats)}
         renderItem={this.handleRenderRow}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.title}
       />
     );
   }
 }
 
-const mapStateToProps = (state: AppState) => ({ chats: state.chats });
+const mapStateToProps = (state: AppState) => ({ chats: state.chats.chats });
 
 export default connect(
   mapStateToProps,

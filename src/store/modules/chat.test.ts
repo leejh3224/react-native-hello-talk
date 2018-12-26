@@ -2,7 +2,14 @@ import { runSaga } from "redux-saga";
 import chats from "mocks/chats.json";
 import users from "mocks/users.json";
 import api from "api";
-import { reducer, createChat, createChatSaga, updateChat } from "./chat";
+import {
+  reducer,
+  createChat,
+  createChatSaga,
+  updateChat,
+  sendMessageSaga,
+  sendMessage
+} from "./chat";
 import { getType } from "typesafe-actions";
 
 /**
@@ -65,5 +72,19 @@ describe("saga", () => {
       }
     ]);
     expect(api.createChat).toBeCalledWith(newChat);
+  });
+
+  it("should test sendMessageSaga", async () => {
+    const dispatched: any[] = [];
+
+    await runSaga(
+      {
+        dispatch: action => dispatched.push(action)
+      },
+      sendMessageSaga,
+      sendMessage.request({})
+    ).done;
+
+    expect(dispatched).toEqual([]);
   });
 });

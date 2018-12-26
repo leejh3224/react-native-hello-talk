@@ -14,11 +14,15 @@ import {
 } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { connect } from "react-redux";
+import uuid from "uuid/v4";
 import { colors } from "theme";
-import chats from "mocks/chats.json";
+import { sendMessage } from "store/modules/chat";
+import { AppState } from "store/modules";
 
 class ChatRoom extends React.Component<NavigationScreenProps> {
   state = {
+    chatId: "",
     text: ""
   };
 
@@ -27,6 +31,28 @@ class ChatRoom extends React.Component<NavigationScreenProps> {
       ...prev,
       text
     }));
+  };
+
+  handleSendMessage = () => {
+    /**
+     * 1. message
+     * 2. sender uid
+     * 3. timestamp
+     */
+    const { sendMessageRequest, navigation } = this.props;
+    const { text } = this.state;
+
+    const chatId = navigation.getParam("chatId", uuid());
+
+    sendMessageRequest({
+      chatId,
+      message: text,
+      sender: "lee",
+      timestamp: Date.now()
+    });
+
+    // clear the message
+    this.handleChangeText("");
   };
 
   handleRenderRow = ({ item, index }: any) => {
@@ -70,6 +96,24 @@ class ChatRoom extends React.Component<NavigationScreenProps> {
       />
     );
 
+    const Timestamp = ({ isMyChat = false }) => {
+      return (
+        <Text
+          style={{
+            marginLeft: isMyChat ? 8 : 0,
+            marginRight: isMyChat ? 0 : 8,
+            alignSelf: "flex-end",
+            color: colors.gray
+          }}
+        >
+          {new Intl.DateTimeFormat("ko-kr", {
+            hour: "numeric",
+            minute: "numeric"
+          }).format(item.timestamp)}
+        </Text>
+      );
+    };
+
     const MyChat = () => {
       return (
         <View
@@ -80,6 +124,7 @@ class ChatRoom extends React.Component<NavigationScreenProps> {
         >
           <Profile />
           <Message />
+          <Timestamp isMyChat />
         </View>
       );
     };
@@ -92,6 +137,7 @@ class ChatRoom extends React.Component<NavigationScreenProps> {
             alignSelf: "flex-end"
           }}
         >
+          <Timestamp />
           <Message />
           <Profile />
         </View>
@@ -122,7 +168,7 @@ class ChatRoom extends React.Component<NavigationScreenProps> {
      * 1. add align-self: flex-start to text container
      * 2. wrap this with view with style align-self: center
      */
-    const { messages } = chats[0];
+    const { messages } = this.props;
 
     // iPhoneX support
     const dimension = Dimensions.get("window");
@@ -138,9 +184,9 @@ class ChatRoom extends React.Component<NavigationScreenProps> {
           </View>
         </View>
         <FlatList
-          data={messages}
+          data={Object.values(messages)}
           renderItem={this.handleRenderRow}
-          keyExtractor={item => item.id}
+          keyExtractor={item => Number(item.timestamp).toString()}
         />
         <View
           style={{
@@ -162,8 +208,12 @@ class ChatRoom extends React.Component<NavigationScreenProps> {
               marginRight: 8
             }}
             onChangeText={this.handleChangeText}
+            value={this.state.text}
           />
-          <TouchableOpacity disabled={this.state.text.length <= 0}>
+          <TouchableOpacity
+            disabled={this.state.text.length <= 0}
+            onPress={this.handleSendMessage}
+          >
             <MaterialCommunityIcons
               name="send"
               size={32}
@@ -176,4 +226,11 @@ class ChatRoom extends React.Component<NavigationScreenProps> {
   }
 }
 
-export default ChatRoom;
+const mapStateToProps = (state: AppState, ownProps) => ({
+  messages: state.chats.messages[ownProps.navigation.getParam("chatId")] || {}
+});
+
+export default connect(
+  mapStateToProps,
+  { sendMessageRequest: sendMessage.request }
+)(ChatRoom);
