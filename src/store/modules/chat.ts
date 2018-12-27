@@ -74,12 +74,12 @@ export const reducer = (state: any = initialState, action: ChatActions) => {
         messages: {
           ...state.messages,
           [chatId]: {
-            ...state.messages[chatId],
             [uuid()]: {
               sender,
               message,
               timestamp
-            }
+            },
+            ...state.messages[chatId]
           }
         }
       };

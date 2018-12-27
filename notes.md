@@ -125,6 +125,11 @@ assert.deepEqual(dispatched, [
 ])
 ```
 
+### reference
+
+- [The best way to test Redux Sagas](https://dev.to/phil/the-best-way-to-test-redux-sagas-4hib)
+- [Official redux saga doc](https://redux-saga.js.org/docs/advanced/Testing.html)
+
 ## Sharing global state between screens
 
 `React Navigation` provides us with [handy option to share state between screens](https://reactnavigation.org/docs/en/headers.html#updating-navigationoptions-with-setparams).
@@ -135,7 +140,56 @@ There are some issues related to this problem like [this one](https://github.com
 
 So I just used redux and `uiReducer` to handle this problem.
 
-### reference
+## Pure Components
 
-- [The best way to test Redux Sagas](https://dev.to/phil/the-best-way-to-test-redux-sagas-4hib)
-- [Official redux saga doc](https://redux-saga.js.org/docs/advanced/Testing.html)
+[[FlatList] FlatList and VirtualizedList Scroll performance is laggy after 30+ rows](https://github.com/facebook/react-native/issues/13413)
+[Tips to Avoid Rerendering React-Native Components](http://blog.flaviocaetano.com/post/tips-to-avoid-rerendering-react-native-components/)
+
+If you're using one of the `ReactNative`'s list components, then you should reduce the number of renders to optimize performance.
+
+It is good practice to use flat props and `PureComponents` for rendering list items.
+
+## Chat ui scrollToBottom
+
+SectionList component should respond to a keyboard.
+
+So, list should scrollToBottom when keyboard is shown.
+
+And also newly sent messages should come at the end of the list.
+
+I tried to implement this behavior by adding `keyboardListener` and `scrollToLocation` api.
+
+[DOC: keyboardListener](https://facebook.github.io/react-native/docs/keyboard)
+[DOC: sectionList.scrollToLocation()](https://facebook.github.io/react-native/docs/sectionlist#scrolltolocation)
+
+But this approach had some drawbacks.
+
+1. [`keyboardWillShow` is not supported in android](https://github.com/facebook/react-native/issues/15387).
+   You should use `keyboardDidShow` instead but as it will be triggered after keyboard shows up, it is not smooth and responds slowly.
+
+2. `sectionList.scrollToLocation` doesn't work as expected when new row is added.
+   It just scrolls down to second last item as the list itself has no idea how tall a newly added item is.
+
+### Alternative approach
+
+I checked out the code from [react-native-chat-tutorial](https://github.com/jevakallio/react-native-chat-tutorial).
+
+He used `inverted` prop and added messages in reverse order like a stack.
+
+As I'm using `SectionList` to show the day, I moved the day title from `header` to `footer`.
+
+Now you don't have to use `keyboardListener` or manually scroll down the list.
+
+## Fit view size to content
+
+1. add align-self: flex-start to text container
+2. wrap this with view with style align-self: center
+
+```js
+<View style={{ alignSelf: 'center' }}>
+	{/* timestampContainer -> align-self: flex-start */}
+	<View style={styles.timestampContainer}>
+		<Text style={styles.timestamp}>{title}</Text>
+	</View>
+</View>
+```

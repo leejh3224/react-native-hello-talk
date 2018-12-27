@@ -3,8 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
-  ImageStyle,
   KeyboardAvoidingView,
   TextInput,
   Platform,
@@ -20,7 +18,7 @@ import { colors } from "theme";
 import { sendMessage } from "store/modules/chat";
 import { AppState } from "store/modules";
 import { Message as IMessage } from "models/Message";
-import { getHoursAndMinutes } from "lib";
+import ChatBubble from "./ChatBubble";
 
 interface Props extends NavigationScreenProps {
   sendMessageRequest: typeof sendMessage.request;
@@ -29,11 +27,18 @@ interface Props extends NavigationScreenProps {
   };
 }
 
-class ChatRoom extends React.Component<Props> {
+interface State {
+  chatId: string;
+  text: string;
+}
+
+class ChatRoom extends React.Component<Props, State> {
   state = {
     chatId: "",
     text: ""
   };
+
+  private sectionList!: SectionList<IMessage>;
 
   handleChangeText = (text: string) => {
     this.setState(prev => ({
@@ -59,160 +64,85 @@ class ChatRoom extends React.Component<Props> {
     this.handleChangeText("");
   };
 
-  handleRenderRow = ({ item, index }: { item: IMessage; index: number }) => {
-    const styles = StyleSheet.create({
-      container: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginTop: 16
-      },
-      profileImage: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        marginHorizontal: 16
-      },
-      messageContainer: {
-        backgroundColor: colors.white,
-        borderRadius: 20,
-        alignSelf: "flex-start",
-        paddingVertical: 8,
-        paddingHorizontal: 16
-      },
-      message: {
-        fontSize: 18
-      }
-    });
-
-    const Message = () => (
-      <View style={styles.messageContainer}>
-        <Text style={styles.message}>{item.message}</Text>
-      </View>
-    );
-
-    const Profile = () => (
-      <Image
+  handleRenderRow = ({ item }: { item: IMessage }) => {
+    // TODO: add check for which user's chat
+    return (
+      <ChatBubble
         source={{
           uri:
-            "https://www.profiletalent.com.au/wp-content/uploads/2017/05/profile-talent-ant-simpson-feature.jpg"
+            "https://m.media-amazon.com/images/M/MV5BMjM3MjM3NTAxM15BMl5BanBnXkFtZTgwMTY0Nzg2OTE@._V1_UX214_CR0,0,214,317_AL_.jpg"
         }}
-        style={styles.profileImage as ImageStyle}
+        message={item.message}
+        timestamp={item.timestamp}
       />
     );
-
-    const Timestamp = ({ isMyChat = false }) => {
-      return (
-        <Text
-          style={{
-            marginLeft: isMyChat ? 8 : 0,
-            marginRight: isMyChat ? 0 : 8,
-            alignSelf: "flex-end",
-            color: colors.gray
-          }}
-        >
-          {getHoursAndMinutes(item.timestamp)}
-        </Text>
-      );
-    };
-
-    const MyChat = () => {
-      return (
-        <View
-          style={{
-            ...(styles.container as object),
-            alignSelf: "flex-start"
-          }}
-        >
-          <Profile />
-          <Message />
-          <Timestamp isMyChat />
-        </View>
-      );
-    };
-
-    const OthersChat = () => {
-      return (
-        <View
-          style={{
-            ...(styles.container as object),
-            alignSelf: "flex-end"
-          }}
-        >
-          <Timestamp />
-          <Message />
-          <Profile />
-        </View>
-      );
-    };
-
-    // TODO: add check for which user's chat
-    return <MyChat />;
   };
 
   render() {
-    const styles = StyleSheet.create({
-      timestampContainer: {
-        borderRadius: 20,
-        backgroundColor: colors.gray,
-        marginTop: 8,
-        padding: 8,
-        alignSelf: "flex-start"
-      },
-      timestamp: {
-        color: colors.white,
-        fontSize: 16,
-        textAlign: "center"
-      }
-    });
-
-    /**
-     * Trick to fit view size to content:
-     * 1. add align-self: flex-start to text container
-     * 2. wrap this with view with style align-self: center
-     */
-    const { messages } = this.props;
-
     // iPhoneX support
     const dimension = Dimensions.get("window");
     const isIPhoneX =
       Platform.OS === "ios" &&
       (dimension.height > 800 || dimension.width > 800);
 
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1
+      },
+      timestampContainer: {
+        borderRadius: 20,
+        backgroundColor: colors.gray,
+        marginTop: 8,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        alignSelf: "flex-start"
+      },
+      timestamp: {
+        color: colors.white,
+        fontSize: 16,
+        textAlign: "center"
+      },
+      textInputContainer: {
+        padding: 8,
+        backgroundColor: colors.white,
+        paddingBottom: isIPhoneX ? 36 : 8,
+        flexDirection: "row"
+      },
+      textInput: {
+        borderRadius: 20,
+        padding: 8,
+        backgroundColor: colors.white,
+        borderColor: colors.gray,
+        borderWidth: 0.5,
+        flex: 1,
+        marginRight: 8
+      }
+    });
+
+    const { messages } = this.props;
+
     return (
-      <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+      <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <SectionList
-          sections={[{ title: "2018.12.27", data: Object.values(messages) }]}
-          renderSectionHeader={({ section: { title } }) => {
-            return (
+          inverted
+          ref={ref => ((this.sectionList as any) = ref)}
+          sections={[{ title: "2018.12.17", data: Object.values(messages) }]}
+          renderSectionFooter={({ section: { title, data } }) => {
+            return data.length > 0 ? (
               <View style={{ alignSelf: "center" }}>
                 <View style={styles.timestampContainer}>
                   <Text style={styles.timestamp}>{title}</Text>
                 </View>
               </View>
-            );
+            ) : null;
           }}
           renderItem={this.handleRenderRow}
           keyExtractor={item => Number(item.timestamp).toString()}
         />
-        <View
-          style={{
-            padding: 8,
-            backgroundColor: colors.white,
-            paddingBottom: isIPhoneX ? 36 : 8,
-            flexDirection: "row"
-          }}
-        >
+        <View style={styles.textInputContainer}>
           <TextInput
             placeholder="메세지를 입력하세요."
-            style={{
-              borderRadius: 20,
-              padding: 8,
-              backgroundColor: colors.white,
-              borderColor: colors.gray,
-              borderWidth: 0.5,
-              flex: 1,
-              marginRight: 8
-            }}
+            style={styles.textInput}
             onChangeText={this.handleChangeText}
             value={this.state.text}
             onSubmitEditing={this.handleSendMessage}
