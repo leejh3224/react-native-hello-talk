@@ -15,12 +15,17 @@ import { colors } from "theme";
 import { AppState } from "store/modules";
 // import chats from "mocks/chats.json";
 import { setBottomTabBarVisibility } from "store/modules/ui";
+import { Chat } from "models/Chat";
+
 interface Props extends NavigationScreenProps {
   setBottomTabBarVisibility: typeof setBottomTabBarVisibility;
+  chats: {
+    [key: string]: Chat;
+  };
 }
 
 class ChatHome extends React.Component<Props, {}> {
-  handleRenderRow = ({ item }) => {
+  handleRenderRow = ({ item, index }: { item: Chat; index: number }) => {
     const styles = StyleSheet.create({
       container: {
         flex: 1,
@@ -48,13 +53,15 @@ class ChatHome extends React.Component<Props, {}> {
       }
     });
 
-    const { navigation } = this.props;
+    const { navigation, chats } = this.props;
 
     return (
       <TouchableOpacity
         style={styles.container}
         onPress={() => {
-          navigation.navigate(getNavigationKey(["chat", "room"]));
+          navigation.navigate(getNavigationKey(["chat", "room"]), {
+            chatId: Object.keys(chats)[index]
+          });
           this.props.setBottomTabBarVisibility(false);
         }}
       >
@@ -79,7 +86,7 @@ class ChatHome extends React.Component<Props, {}> {
     const { chats } = this.props;
 
     return (
-      <FlatList
+      <FlatList<Chat>
         data={Object.values(chats)}
         renderItem={this.handleRenderRow}
         keyExtractor={item => item.title}

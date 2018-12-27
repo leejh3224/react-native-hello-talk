@@ -19,12 +19,17 @@ import { withPrefix } from "store/utils";
 import api from "api";
 import { Chat } from "models/Chat";
 import { User } from "models/User";
+import { Message } from "models/Message";
+
+interface SendMessagePayload extends Message {
+  chatId: string;
+}
 
 export const sendMessage = createAsyncAction(
   withPrefix("SEND_MESSAGE_REQUEST"),
   withPrefix("SEND_MESSAGE_SUCCESS"),
   withPrefix("SEND_MESSAGE_FAILURE")
-)<object, object, Error>();
+)<SendMessagePayload, SendMessagePayload, Error>();
 
 export const createChat = createAsyncAction(
   withPrefix("CREATE_CHAT_REQUEST"),
@@ -49,13 +54,19 @@ const initialState = {
 export const reducer = (state: any = initialState, action: ChatActions) => {
   switch (action.type) {
     case getType(sendMessage.success): {
-      const { chatId, sender, message, timestamp } = action.payload;
+      const {
+        chatId,
+        sender,
+        message,
+        timestamp
+      } = action.payload as SendMessagePayload;
 
       return {
         ...state,
         chats: {
           ...state.chats,
           [chatId]: {
+            ...state.chats[chatId],
             lastMessage: message,
             timestamp
           }
@@ -75,7 +86,6 @@ export const reducer = (state: any = initialState, action: ChatActions) => {
     }
     case getType(createChat.success): {
       const { chatId, title, members } = action.payload;
-      console.log(chatId, action.payload);
 
       return {
         ...state,
@@ -127,7 +137,7 @@ export const createMessage = data => {
   return data;
 };
 
-export function* sendMessageSaga({ payload }: any) {
+export function* sendMessageSaga({ payload }: { payload: SendMessagePayload }) {
   try {
     const message = yield call(createMessage, payload);
     yield put(sendMessage.success(message));

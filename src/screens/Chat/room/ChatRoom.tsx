@@ -19,8 +19,16 @@ import uuid from "uuid/v4";
 import { colors } from "theme";
 import { sendMessage } from "store/modules/chat";
 import { AppState } from "store/modules";
+import { Message as IMessage } from "models/Message";
 
-class ChatRoom extends React.Component<NavigationScreenProps> {
+interface Props extends NavigationScreenProps {
+  sendMessageRequest: typeof sendMessage.request;
+  messages: {
+    [key: string]: IMessage;
+  };
+}
+
+class ChatRoom extends React.Component<Props> {
   state = {
     chatId: "",
     text: ""
@@ -34,11 +42,6 @@ class ChatRoom extends React.Component<NavigationScreenProps> {
   };
 
   handleSendMessage = () => {
-    /**
-     * 1. message
-     * 2. sender uid
-     * 3. timestamp
-     */
     const { sendMessageRequest, navigation } = this.props;
     const { text } = this.state;
 
@@ -55,7 +58,7 @@ class ChatRoom extends React.Component<NavigationScreenProps> {
     this.handleChangeText("");
   };
 
-  handleRenderRow = ({ item, index }: any) => {
+  handleRenderRow = ({ item, index }: { item: IMessage; index: number }) => {
     const styles = StyleSheet.create({
       container: {
         flexDirection: "row",
@@ -183,7 +186,7 @@ class ChatRoom extends React.Component<NavigationScreenProps> {
             <Text style={styles.timestamp}>2018.11.6 오전 8:28</Text>
           </View>
         </View>
-        <FlatList
+        <FlatList<IMessage>
           data={Object.values(messages)}
           renderItem={this.handleRenderRow}
           keyExtractor={item => Number(item.timestamp).toString()}
@@ -226,7 +229,7 @@ class ChatRoom extends React.Component<NavigationScreenProps> {
   }
 }
 
-const mapStateToProps = (state: AppState, ownProps) => ({
+const mapStateToProps = (state: AppState, ownProps: Props) => ({
   messages: state.chats.messages[ownProps.navigation.getParam("chatId")] || {}
 });
 
