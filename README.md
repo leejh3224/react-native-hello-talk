@@ -67,7 +67,7 @@ Constants.extra.projectId === 'rn-hello-talk' // use extra field like this!
 
   ✅ create new chat
 
-  ⬛ list chats belonging to the user
+  ✅ list chats belonging to the user
 
   ⬛ support emoji
 

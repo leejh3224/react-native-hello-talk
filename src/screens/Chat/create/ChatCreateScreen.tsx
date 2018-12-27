@@ -3,30 +3,51 @@ import { Text, TouchableOpacity } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 import { connect } from "react-redux";
 import uuid from "uuid/v4";
+import isEqual from "lodash.isequal";
 import { getNavigationKey } from "lib";
 import { User } from "models/User";
 import { createChat } from "store/modules/chat";
 import { setBottomTabBarVisibility } from "store/modules/ui";
+import { AppState } from "store/modules";
+import { Chat } from "models/Chat";
 import ChatCreate from "./ChatCreate";
 
 const ChatCreateScreen = {
   screen: ChatCreate,
   navigationOptions: ({ navigation }: NavigationScreenProps) => {
     const selected = navigation.getParam("selected", []) as User[];
-    const OKButton = (props: any) => {
+
+    interface Props {
+      chats: {
+        [key: string]: Chat;
+      };
+      setBottomTabBarVisibility: typeof setBottomTabBarVisibility;
+      createChatRequest: typeof createChat.request;
+    }
+
+    const OKButton = ({ chats, ...props }: Props) => {
       const newChatId = uuid();
+
+      // check if chat room with same members exists
+      const sameChatRoomExists = Object.keys(chats).find(key => {
+        const chatMemberNames = chats[key].title.split(", ");
+        const selectedNames = selected.map(user => user.name);
+
+        return isEqual(chatMemberNames.sort(), selectedNames.sort());
+      });
 
       return (
         <TouchableOpacity
           onPress={() => {
-            // TODO: create /chats child key and pass it to room
-            props.createChatRequest({
-              chatId: newChatId,
-              selected,
-              title: selected[0].name
-            });
+            if (!sameChatRoomExists) {
+              props.createChatRequest({
+                chatId: newChatId,
+                selected,
+                title: selected[0].name
+              });
+            }
             navigation.navigate(getNavigationKey(["chat", "room"]), {
-              chatId: newChatId
+              chatId: sameChatRoomExists || newChatId
             });
             props.setBottomTabBarVisibility(false);
           }}
@@ -45,8 +66,12 @@ const ChatCreateScreen = {
       );
     };
 
+    const mapStateToProps = (state: AppState) => ({
+      chats: state.chats.chats
+    });
+
     const ConnectedOKButton = connect(
-      null,
+      mapStateToProps,
       { setBottomTabBarVisibility, createChatRequest: createChat.request }
     )(OKButton);
 

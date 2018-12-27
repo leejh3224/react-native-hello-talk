@@ -31,7 +31,9 @@ class ChatHome extends React.Component<Props, {}> {
         flex: 1,
         flexDirection: "row",
         padding: 16,
-        backgroundColor: colors.white
+        backgroundColor: colors.white,
+        borderBottomColor: colors.gray,
+        borderBottomWidth: 0.5
       },
       profileImage: {
         width: 60,

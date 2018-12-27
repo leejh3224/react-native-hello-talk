@@ -7,17 +7,26 @@ import {
 } from "react-navigation";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { connect } from "react-redux";
-import { getNavigationKey } from "lib";
+import { getNavigationKey, getHoursAndMinutes } from "lib";
 import { colors } from "theme";
 import { setBottomTabBarVisibility } from "store/modules/ui";
+import { AppState } from "store/modules";
+import { Chat } from "models/Chat";
 import ChatRoom from "./ChatRoom";
 
 interface BackButtonProps {
   navigation: NavigationParams;
   setBottomTabBarVisibility: typeof setBottomTabBarVisibility;
+  chats: {
+    [key: string]: Chat;
+  };
 }
 
-const BackButton: React.SFC<BackButtonProps> = ({ navigation, ...props }) => {
+const BackButton: React.SFC<BackButtonProps> = ({
+  navigation,
+  chats,
+  ...props
+}) => {
   const styles = StyleSheet.create({
     container: {
       flexDirection: "row",
@@ -32,6 +41,9 @@ const BackButton: React.SFC<BackButtonProps> = ({ navigation, ...props }) => {
     }
   });
 
+  const chatId = navigation.getParam("chatId", "default-chatId");
+  const { title, timestamp } = chats[chatId];
+
   return (
     <View style={styles.container}>
       <HeaderBackButton
@@ -41,15 +53,21 @@ const BackButton: React.SFC<BackButtonProps> = ({ navigation, ...props }) => {
         }}
       />
       <View>
-        <Text style={styles.title}>John</Text>
-        <Text style={styles.subtitle}>새벽 3:44</Text>
+        <Text style={styles.title}>{title}</Text>
+        {timestamp && (
+          <Text style={styles.subtitle}>{getHoursAndMinutes(timestamp)}</Text>
+        )}
       </View>
     </View>
   );
 };
 
+const mapStateToProps = (state: AppState) => ({
+  chats: state.chats.chats
+});
+
 const ConnectedBackButton = connect(
-  null,
+  mapStateToProps,
   { setBottomTabBarVisibility }
 )(BackButton);
 

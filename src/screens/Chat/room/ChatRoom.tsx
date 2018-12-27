@@ -3,14 +3,14 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   Image,
   ImageStyle,
   KeyboardAvoidingView,
   TextInput,
   Platform,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  SectionList
 } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -20,6 +20,7 @@ import { colors } from "theme";
 import { sendMessage } from "store/modules/chat";
 import { AppState } from "store/modules";
 import { Message as IMessage } from "models/Message";
+import { getHoursAndMinutes } from "lib";
 
 interface Props extends NavigationScreenProps {
   sendMessageRequest: typeof sendMessage.request;
@@ -109,10 +110,7 @@ class ChatRoom extends React.Component<Props> {
             color: colors.gray
           }}
         >
-          {new Intl.DateTimeFormat("ko-kr", {
-            hour: "numeric",
-            minute: "numeric"
-          }).format(item.timestamp)}
+          {getHoursAndMinutes(item.timestamp)}
         </Text>
       );
     };
@@ -147,7 +145,8 @@ class ChatRoom extends React.Component<Props> {
       );
     };
 
-    return index % 2 !== 1 ? <MyChat /> : <OthersChat />;
+    // TODO: add check for which user's chat
+    return <MyChat />;
   };
 
   render() {
@@ -181,13 +180,17 @@ class ChatRoom extends React.Component<Props> {
 
     return (
       <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
-        <View style={{ alignSelf: "center" }}>
-          <View style={styles.timestampContainer}>
-            <Text style={styles.timestamp}>2018.11.6 오전 8:28</Text>
-          </View>
-        </View>
-        <FlatList<IMessage>
-          data={Object.values(messages)}
+        <SectionList
+          sections={[{ title: "2018.12.27", data: Object.values(messages) }]}
+          renderSectionHeader={({ section: { title } }) => {
+            return (
+              <View style={{ alignSelf: "center" }}>
+                <View style={styles.timestampContainer}>
+                  <Text style={styles.timestamp}>{title}</Text>
+                </View>
+              </View>
+            );
+          }}
           renderItem={this.handleRenderRow}
           keyExtractor={item => Number(item.timestamp).toString()}
         />
@@ -212,6 +215,8 @@ class ChatRoom extends React.Component<Props> {
             }}
             onChangeText={this.handleChangeText}
             value={this.state.text}
+            onSubmitEditing={this.handleSendMessage}
+            enablesReturnKeyAutomatically
           />
           <TouchableOpacity
             disabled={this.state.text.length <= 0}
