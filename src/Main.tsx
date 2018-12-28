@@ -6,7 +6,7 @@ import {
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { MenuProvider } from "react-native-popup-menu";
 import { Provider } from "react-redux";
-import { ChatScreen, FeedScreen, AuthScreen } from "screens";
+import { ChatScreen, AuthScreen, ProfileScreen } from "screens";
 import configureStore from "store";
 import { colors } from "theme";
 import "lib/initFirebase";
@@ -14,7 +14,7 @@ import "lib/initFirebase";
 const MainFlow = createBottomTabNavigator(
   {
     Chat: ChatScreen,
-    Feed: FeedScreen
+    Profile: ProfileScreen
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -24,8 +24,8 @@ const MainFlow = createBottomTabNavigator(
 
         if (routeName === "Chat") {
           iconName = `message${focused ? "" : "-outline"}`;
-        } else if (routeName === "Feed") {
-          iconName = "earth";
+        } else if (routeName === "Profile") {
+          iconName = "account";
         }
 
         return (
@@ -46,7 +46,7 @@ const MainFlow = createBottomTabNavigator(
       activeTintColor: colors.primary,
       inactiveTintColor: colors.gray
     },
-    initialRouteName: "Chat"
+    initialRouteName: "Profile"
   }
 );
 

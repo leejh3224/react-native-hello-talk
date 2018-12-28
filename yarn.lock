@@ -5887,6 +5887,11 @@ react-native-reanimated@1.0.0-alpha.10:
   version "1.0.0-alpha.10"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.0.0-alpha.10.tgz#e9e6fb35a2cf52fdc912b9fbc76f34f80698e530"
 
+react-native-round-flags@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-round-flags/-/react-native-round-flags-1.0.4.tgz#b1dcebca26154a9f5f8c379efb14ee57a72e131f"
+  integrity sha1-sdzryiYVSp9fjDee+xTuV6cuEx8=
+
 react-native-safe-area-view@0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-view/-/react-native-safe-area-view-0.11.0.tgz#4f3dda43c2bace37965e7c6aef5fc83d4f19d174"

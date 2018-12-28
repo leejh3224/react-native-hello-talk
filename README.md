@@ -59,9 +59,15 @@ Constants.extra.projectId === 'rn-hello-talk' // use extra field like this!
 
 ## Features
 
+⬛ not implemented
+
+✅ implemented (+ In Progress)
+
 - Auth
 
   ✅ login using googleOAuth
+
+  ⬛ additional register flow
 
 - Chat
 
@@ -69,17 +75,11 @@ Constants.extra.projectId === 'rn-hello-talk' // use extra field like this!
 
   ✅ list chats belonging to the user
 
-  ⬛ support emoji
+  ✅ support emoji (go with default emoji picker)
 
-  ⬛ send pictures/videos
+  ✅ send pictures/videos
 
   ⬛ support translation
-
-- Feed
-
-  ⬛ create new feed
-
-  ⬛ save images/videos ([firestore](https://firebase.google.com/docs/firestore/))
 
 - Profile
 

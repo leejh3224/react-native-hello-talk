@@ -8,11 +8,14 @@ import {
   Platform,
   Dimensions,
   TouchableOpacity,
-  SectionList
+  SectionList,
+  Keyboard,
+  EmitterSubscription
 } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { connect } from "react-redux";
+import { ImagePicker, Permissions } from "expo";
 import uuid from "uuid/v4";
 import { colors } from "theme";
 import { sendMessage } from "store/modules/chat";
@@ -30,15 +33,96 @@ interface Props extends NavigationScreenProps {
 interface State {
   chatId: string;
   text: string;
+  uploadMenuBarVisible: boolean;
 }
 
 class ChatRoom extends React.Component<Props, State> {
   state = {
     chatId: "",
-    text: ""
+    text: "",
+    uploadMenuBarVisible: false
   };
 
   private sectionList!: SectionList<IMessage>;
+  private keyboardDidShowListener!: EmitterSubscription;
+
+  componentDidMount = () => {
+    this.keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      this.keyboardDidShow
+    );
+  };
+
+  componentWillUnmount() {
+    this.keyboardDidShowListener.remove();
+  }
+
+  // TODO: add animation for hiding uploadMenuBar
+  toggleUploadMenuBar = () => {
+    // hide Keyboard when user try to open upload menubar
+    const willOpenUploadMenuBar = !this.state.uploadMenuBarVisible;
+
+    if (willOpenUploadMenuBar) {
+      Keyboard.dismiss();
+    }
+
+    this.setState(prev => ({
+      ...prev,
+      uploadMenuBarVisible: !prev.uploadMenuBarVisible
+    }));
+  };
+
+  keyboardDidShow = () => {
+    if (this.state.uploadMenuBarVisible) {
+      this.toggleUploadMenuBar();
+    }
+  };
+
+  askCameraRollPermission = async () => {
+    // Requires Permissions.CAMERA_ROLL on iOS only.
+    if (Platform.OS === "ios") {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      return status === "granted";
+    }
+    return true;
+  };
+
+  askCameraPermission = async () => {
+    // Requires Permissions.CAMERA_ROLL and Permissions.CAMERA on iOS only.
+    if (Platform.OS === "ios") {
+      const [cameraRoll, camera] = await Promise.all([
+        Permissions.askAsync(Permissions.CAMERA_ROLL),
+        Permissions.askAsync(Permissions.CAMERA)
+      ]);
+
+      return cameraRoll.status === "granted" && camera.status === "granted";
+    }
+    return true;
+  };
+
+  openCamera = async () => {
+    const permission = await this.askCameraPermission();
+
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true
+    });
+
+    if (permission && !result.cancelled) {
+      console.log(result);
+    }
+  };
+
+  pickImage = async () => {
+    const permission = await this.askCameraRollPermission();
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true
+    });
+
+    if (permission && !result.cancelled) {
+      console.log(result);
+    }
+  };
 
   handleChangeText = (text: string) => {
     this.setState(prev => ({
@@ -116,6 +200,30 @@ class ChatRoom extends React.Component<Props, State> {
         borderWidth: 0.5,
         flex: 1,
         marginRight: 8
+      },
+      uploadMenuIconButton: {
+        alignSelf: "center",
+        marginRight: 8
+      },
+      uploadMenuBarContainer: {
+        borderTopColor: colors.gray,
+        borderTopWidth: 0.5,
+        padding: 16,
+        paddingBottom: 32,
+        backgroundColor: colors.white,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-around"
+      },
+      menuContainer: {
+        alignItems: "center"
+      },
+      menuIconContainer: {
+        borderWidth: 0.5,
+        borderColor: colors.gray,
+        padding: 8,
+        borderRadius: 10,
+        marginBottom: 8
       }
     });
 
@@ -140,6 +248,18 @@ class ChatRoom extends React.Component<Props, State> {
           keyExtractor={item => Number(item.timestamp).toString()}
         />
         <View style={styles.textInputContainer}>
+          <TouchableOpacity
+            style={styles.uploadMenuIconButton}
+            onPress={this.toggleUploadMenuBar}
+          >
+            <MaterialCommunityIcons
+              name="plus-circle-outline"
+              size={28}
+              color={
+                this.state.uploadMenuBarVisible ? colors.primary : colors.gray
+              }
+            />
+          </TouchableOpacity>
           <TextInput
             placeholder="메세지를 입력하세요."
             style={styles.textInput}
@@ -159,6 +279,46 @@ class ChatRoom extends React.Component<Props, State> {
             />
           </TouchableOpacity>
         </View>
+        {this.state.uploadMenuBarVisible && (
+          <View style={styles.uploadMenuBarContainer}>
+            <View style={styles.menuContainer}>
+              <TouchableOpacity
+                style={styles.menuIconContainer}
+                onPress={this.pickImage}
+              >
+                <MaterialCommunityIcons
+                  name="image"
+                  size={32}
+                  color={colors.gray}
+                />
+              </TouchableOpacity>
+              <Text>이미지</Text>
+            </View>
+            <View style={styles.menuContainer}>
+              <TouchableOpacity
+                style={styles.menuIconContainer}
+                onPress={this.openCamera}
+              >
+                <MaterialCommunityIcons
+                  name="camera"
+                  size={32}
+                  color={colors.gray}
+                />
+              </TouchableOpacity>
+              <Text>카메라</Text>
+            </View>
+            <View style={styles.menuContainer}>
+              <TouchableOpacity style={styles.menuIconContainer}>
+                <MaterialCommunityIcons
+                  name="video"
+                  size={32}
+                  color={colors.gray}
+                />
+              </TouchableOpacity>
+              <Text>비디오</Text>
+            </View>
+          </View>
+        )}
       </KeyboardAvoidingView>
     );
   }

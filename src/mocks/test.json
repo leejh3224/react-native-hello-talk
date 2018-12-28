@@ -17,7 +17,13 @@
 			"messageId1": {
 				"sender": "john",
 				"message": "Hi",
-				"timestamp": 1459361875337
+				"timestamp": 1459361875337,
+				"media": {
+					"type": "image/jpeg",
+					"uri": "dfdfdfdfd",
+					"width": 870,
+					"height": 550
+				}
 			},
 			"messageId2": {}
 		}

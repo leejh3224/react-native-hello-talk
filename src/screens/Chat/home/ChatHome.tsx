@@ -10,10 +10,9 @@ import {
 } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 import { connect } from "react-redux";
-import { getNavigationKey } from "lib";
+import { getNavigationKey, getHoursAndMinutes } from "lib";
 import { colors } from "theme";
 import { AppState } from "store/modules";
-// import chats from "mocks/chats.json";
 import { setBottomTabBarVisibility } from "store/modules/ui";
 import { Chat } from "models/Chat";
 
@@ -50,13 +49,21 @@ class ChatHome extends React.Component<Props, {}> {
         fontWeight: "bold"
       },
       subtitle: {
+        maxWidth: 225,
         fontSize: 16,
-        color: "gray"
+        color: colors.gray,
+        // TODO: find better way to restrict max lines to 2
+        height: 40
+      },
+      timestamp: {
+        color: colors.gray,
+        alignSelf: "center"
       }
     });
 
     const { navigation, chats } = this.props;
 
+    // TODO: onLongPress -> delete / turn off notification
     return (
       <TouchableOpacity
         style={styles.container}
@@ -80,6 +87,9 @@ class ChatHome extends React.Component<Props, {}> {
             {item.lastMessage || "대화를 시작해보세요."}
           </Text>
         </View>
+        <Text style={styles.timestamp} numberOfLines={2} ellipsizeMode="tail">
+          {item.timestamp && getHoursAndMinutes(item.timestamp)}
+        </Text>
       </TouchableOpacity>
     );
   };
