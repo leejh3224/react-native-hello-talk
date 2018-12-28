@@ -8,6 +8,8 @@ import {
   MenuOption
 } from "react-native-popup-menu";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { connect } from "react-redux";
+import { setBottomTabBarVisibility } from "store/modules/ui";
 import { getNavigationKey } from "lib";
 import ChatHome from "./ChatHome";
 
@@ -32,9 +34,8 @@ const ChatHomeScreen = {
       }
     });
 
-    return {
-      headerLeft: <Text style={styles.navBarTitle}>Chat</Text>,
-      headerRight: (
+    const HeaderRightMenu = props => {
+      return (
         <Menu>
           <MenuTrigger>
             <MaterialCommunityIcons
@@ -47,9 +48,10 @@ const ChatHomeScreen = {
             <MenuOption
               style={styles.boxListItem}
               value={1}
-              onSelect={() =>
-                navigation.navigate(getNavigationKey(["chat", "findFriend"]))
-              }
+              onSelect={() => {
+                navigation.navigate(getNavigationKey(["chat", "findFriend"]));
+                props.setBottomTabBarVisibility(false);
+              }}
             >
               <MaterialCommunityIcons name="account-plus" size={24} />
               <Text style={styles.menuText}>파트너 찾기</Text>
@@ -69,7 +71,17 @@ const ChatHomeScreen = {
             </MenuOption>
           </MenuOptions>
         </Menu>
-      )
+      );
+    };
+
+    const ConnectedHeaderRightMenu = connect(
+      null,
+      { setBottomTabBarVisibility }
+    )(HeaderRightMenu);
+
+    return {
+      headerLeft: <Text style={styles.navBarTitle}>Chat</Text>,
+      headerRight: <ConnectedHeaderRightMenu />
     };
   }
 };

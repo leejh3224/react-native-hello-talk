@@ -49,6 +49,7 @@ export default createStackNavigator(
           fontSize: 32,
           fontWeight: "bold",
           marginLeft: 16,
+          marginTop: 16,
           color: colors.white,
           alignSelf: "flex-start"
         },
@@ -104,6 +105,7 @@ export default createStackNavigator(
           elevation: 0,
           borderBottomWidth: 0
         },
+        headerLeft: <Text style={styles.navBarTitle as TextStyle}>프로필</Text>,
         headerBackground: (
           <Image
             source={require("../../../assets/images/banana.jpg")}
@@ -157,8 +159,7 @@ export default createStackNavigator(
               <Text style={styles.profileDescription}>Seoul, Korea</Text>
             </View>
           </View>
-        ),
-        headerLeft: <Text style={styles.navBarTitle as TextStyle}>프로필</Text>
+        )
       };
     }
   }

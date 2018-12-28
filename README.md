@@ -81,7 +81,11 @@ Constants.extra.projectId === 'rn-hello-talk' // use extra field like this!
 
   ⬛ support translation
 
+  ⬛ find people to talk to
+
 - Profile
+
+  ⬛ edit profile (image, description, etc)
 
   ⬛ logout
 
