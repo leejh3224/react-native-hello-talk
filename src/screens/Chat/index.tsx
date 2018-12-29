@@ -3,16 +3,19 @@ import { getNavigationKey, globalHeaderConfig } from "lib";
 import { ChatHomeScreen } from "./home";
 import { ChatRoomScreen } from "./room";
 import { ChatCreateScreen } from "./create";
-import { ChatFindFriendScreen } from "./findFriend";
+import { ChatFindFriendScreen, ChatSelectCountryScreen } from "./findFriend";
 
-const { create, findFriend, home, room } = getNavigationKey(["chat"]);
+const { create, findFriend, home, room, selectCountry } = getNavigationKey([
+  "chat"
+]);
 
 export default createStackNavigator(
   {
     [home]: ChatHomeScreen,
     [room]: ChatRoomScreen,
     [create]: ChatCreateScreen,
-    [findFriend]: ChatFindFriendScreen
+    [findFriend]: ChatFindFriendScreen,
+    [selectCountry]: ChatSelectCountryScreen
   },
   {
     initialRouteName: home,

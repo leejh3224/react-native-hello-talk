@@ -5,7 +5,7 @@ import {
   TextStyle,
   View,
   Image,
-  ImageStyle
+  ImageStyle,
 } from "react-native";
 import { createStackNavigator } from "react-navigation";
 import Flag from "react-native-round-flags";
@@ -54,11 +54,11 @@ export default createStackNavigator(
           alignSelf: "flex-start"
         },
         profileContainer: {
+          flex: 1,
           borderRadius: 10,
           backgroundColor: colors.white,
           padding: 32,
-          marginVertical: 16,
-          marginHorizontal: 32,
+          margin: 16,
           flexDirection: "row",
           // shadow
           shadowColor: colors.black,
@@ -80,11 +80,14 @@ export default createStackNavigator(
           marginRight: 16
         },
         profileContentContainer: {
-          justifyContent: "space-evenly"
+          maxWidth: 180,
+          justifyContent: "space-evenly",
+          flex: 1
         },
         profileTitle: {
-          fontSize: 28,
-          fontWeight: "bold"
+          fontSize: 24,
+          fontWeight: "bold",
+          marginBottom: 8
         },
         profileDescription: {
           fontSize: 16,
@@ -138,7 +141,13 @@ export default createStackNavigator(
               />
             </View>
             <View style={styles.profileContentContainer}>
-              <Text style={styles.profileTitle}>John</Text>
+              <Text
+                style={styles.profileTitle}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                정수한무두루미와도깨비알라알리
+              </Text>
               <View
                 style={{
                   flexDirection: "row",

@@ -15,6 +15,7 @@ import { colors } from "theme";
 import { AppState } from "store/modules";
 import { setBottomTabBarVisibility } from "store/modules/ui";
 import { Chat } from "models/Chat";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface Props extends NavigationScreenProps {
   setBottomTabBarVisibility: typeof setBottomTabBarVisibility;
@@ -98,11 +99,37 @@ class ChatHome extends React.Component<Props, {}> {
     const { chats } = this.props;
 
     return (
-      <FlatList<Chat>
-        data={Object.values(chats)}
-        renderItem={this.handleRenderRow}
-        keyExtractor={item => item.title}
-      />
+      <View style={{ flex: 1 }}>
+        <FlatList<Chat>
+          data={Object.values(chats)}
+          renderItem={this.handleRenderRow}
+          keyExtractor={item => item.title}
+          ListEmptyComponent={() => {
+            return (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  alignSelf: "center",
+                  flex: 1
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="help-circle-outline"
+                  color={colors.gray}
+                  size={40}
+                />
+                <Text style={{ color: colors.gray, fontSize: 18 }}>
+                  상단의 + 아이콘을 눌러 대화를 시작하세요.
+                </Text>
+              </View>
+            );
+          }}
+          contentContainerStyle={{
+            flexGrow: 1
+          }}
+        />
+      </View>
     );
   }
 }

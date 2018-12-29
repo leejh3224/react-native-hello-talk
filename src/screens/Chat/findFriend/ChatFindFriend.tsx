@@ -6,26 +6,43 @@ import {
   Picker,
   StyleSheet,
   Slider,
-  ScrollView
+  ScrollView,
+  Dimensions
 } from "react-native";
+import { NavigationScreenProps } from "react-navigation";
 import { Formik } from "formik";
 import Modal from "react-native-modal";
 import range from "lodash.range";
 import { colors } from "theme";
+import { getNavigationKey } from "lib";
 
-class ChatFindFriend extends React.Component {
+interface State {
+  form: {
+    ageMin: number;
+    ageMax: number;
+    country: string;
+    language: string;
+    languageWantToLearn: string;
+    fluency: number;
+  };
+  modalVisible: {
+    age: boolean;
+    [key: string]: boolean;
+  };
+}
+
+class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
   state = {
     form: {
       ageMin: 18,
       ageMax: 90,
-      country: "any",
-      city: "any",
+      country: "모든",
+      language: "EN",
       languageWantToLearn: "KR",
       fluency: 4
     },
     modalVisible: {
-      age: false,
-      country: false
+      age: false
     }
   };
 
@@ -43,9 +60,20 @@ class ChatFindFriend extends React.Component {
     }));
   };
 
+  onSelect = (country: string) => {
+    this.setState(prev => ({
+      ...prev,
+      form: {
+        ...prev.form,
+        country
+      }
+    }));
+  };
+
   render() {
     const { form, modalVisible } = this.state;
-    const { ageMin, ageMax, country, city, fluency } = form;
+    const { ageMin, ageMax, country, fluency } = form;
+    const { navigation } = this.props;
 
     const styles = StyleSheet.create({
       sectionContainer: {
@@ -62,7 +90,8 @@ class ChatFindFriend extends React.Component {
       },
       sectionDescription: {
         fontSize: 16,
-        color: colors.gray
+        color: colors.gray,
+        maxWidth: Dimensions.get("window").width / 2 - 32
       }
     });
 
@@ -77,12 +106,9 @@ class ChatFindFriend extends React.Component {
               <Text style={styles.sectionTitle}>나이</Text>
               <Text
                 style={styles.sectionDescription}
+                numberOfLines={1}
+                ellipsizeMode="tail"
               >{`${ageMin}-${ageMax}`}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>지역</Text>
-              <Text style={styles.sectionDescription}>{country}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -91,14 +117,35 @@ class ChatFindFriend extends React.Component {
                 marginBottom: 16,
                 borderBottomWidth: 0
               }}
+              onPress={() => {
+                navigation.navigate(
+                  getNavigationKey(["chat", "selectCountry"]),
+                  {
+                    selectedCountry: country,
+                    onSelect: this.onSelect
+                  }
+                );
+              }}
             >
-              <Text style={styles.sectionTitle}>도시이름으로 찾기</Text>
-              <Text style={styles.sectionDescription}>{city}</Text>
+              <Text style={styles.sectionTitle}>지역</Text>
+              <Text
+                style={styles.sectionDescription}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {country}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>모국어</Text>
-              <Text style={styles.sectionDescription}>일본어 JP</Text>
+              <Text
+                style={styles.sectionDescription}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                일본어 JP
+              </Text>
             </TouchableOpacity>
 
             <View
@@ -107,7 +154,7 @@ class ChatFindFriend extends React.Component {
                 flexDirection: "column"
               }}
             >
-              <View
+              <TouchableOpacity
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
@@ -117,8 +164,14 @@ class ChatFindFriend extends React.Component {
                 }}
               >
                 <Text style={styles.sectionTitle}>학습 언어</Text>
-                <Text style={styles.sectionDescription}>한국어 KR</Text>
-              </View>
+                <Text
+                  style={styles.sectionDescription}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  한국어 KR
+                </Text>
+              </TouchableOpacity>
               <View
                 style={{
                   alignItems: "center",
@@ -235,7 +288,7 @@ class ChatFindFriend extends React.Component {
                 >
                   <Picker
                     selectedValue={ageMin}
-                    style={{ width: 100, height: 50 }}
+                    style={{ width: "50%", height: 50 }}
                     onValueChange={itemValue => {
                       this.setState(prev => ({
                         ...prev,
@@ -246,7 +299,7 @@ class ChatFindFriend extends React.Component {
                       }));
                     }}
                   >
-                    {range(ageMin, ageMax + 1).map(age => (
+                    {range(18, 91).map(age => (
                       <Picker.Item
                         key={age}
                         label={age.toString()}
@@ -256,7 +309,7 @@ class ChatFindFriend extends React.Component {
                   </Picker>
                   <Picker
                     selectedValue={ageMax}
-                    style={{ width: 100, height: 50 }}
+                    style={{ width: "50%", height: 50 }}
                     onValueChange={itemValue => {
                       this.setState(prev => ({
                         ...prev,
@@ -267,7 +320,7 @@ class ChatFindFriend extends React.Component {
                       }));
                     }}
                   >
-                    {range(ageMin, ageMax + 1).map(age => (
+                    {range(18, 91).map(age => (
                       <Picker.Item
                         key={age}
                         label={age.toString()}
