@@ -17,14 +17,6 @@ import { colors } from "theme";
 import { getNavigationKey } from "lib";
 
 interface State {
-  form: {
-    ageMin: number;
-    ageMax: number;
-    country: string;
-    language: string;
-    languageWantToLearn: string;
-    fluency: number;
-  };
   modalVisible: {
     age: boolean;
     [key: string]: boolean;
@@ -33,14 +25,6 @@ interface State {
 
 class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
   state = {
-    form: {
-      ageMin: 18,
-      ageMax: 90,
-      country: "모든",
-      language: "EN",
-      languageWantToLearn: "KR",
-      fluency: 4
-    },
     modalVisible: {
       age: false
     }
@@ -60,19 +44,8 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
     }));
   };
 
-  onSelect = (country: string) => {
-    this.setState(prev => ({
-      ...prev,
-      form: {
-        ...prev.form,
-        country
-      }
-    }));
-  };
-
   render() {
-    const { form, modalVisible } = this.state;
-    const { ageMin, ageMax, country, fluency } = form;
+    const { modalVisible } = this.state;
     const { navigation } = this.props;
 
     const styles = StyleSheet.create({
@@ -96,8 +69,18 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
     });
 
     return (
-      <Formik initialValues={form} onSubmit={this.onSubmit}>
-        {props => (
+      <Formik
+        initialValues={{
+          ageMin: 18,
+          ageMax: 90,
+          country: "모든",
+          language: "English",
+          languageWantToLearn: "English",
+          fluency: 4
+        }}
+        onSubmit={this.onSubmit}
+      >
+        {({ handleReset, values, setFieldValue }) => (
           <ScrollView>
             <TouchableOpacity
               style={styles.sectionContainer}
@@ -108,7 +91,7 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                 style={styles.sectionDescription}
                 numberOfLines={1}
                 ellipsizeMode="tail"
-              >{`${ageMin}-${ageMax}`}</Text>
+              >{`${values.ageMin}-${values.ageMax}`}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -121,8 +104,8 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                 navigation.navigate(
                   getNavigationKey(["chat", "selectCountry"]),
                   {
-                    selectedCountry: country,
-                    onSelect: this.onSelect
+                    selectedCountry: values.country,
+                    onSelect: setFieldValue
                   }
                 );
               }}
@@ -133,18 +116,30 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                {country}
+                {values.country}
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.sectionContainer}>
+            <TouchableOpacity
+              style={styles.sectionContainer}
+              onPress={() => {
+                navigation.navigate(
+                  getNavigationKey(["chat", "selectLanguage"]),
+                  {
+                    pageTitle: "모국어",
+                    onSelect: setFieldValue,
+                    selectedLanguage: values.language
+                  }
+                );
+              }}
+            >
               <Text style={styles.sectionTitle}>모국어</Text>
               <Text
                 style={styles.sectionDescription}
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
-                일본어 JP
+                {values.language}
               </Text>
             </TouchableOpacity>
 
@@ -162,6 +157,16 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                   width: "100%",
                   marginBottom: 32
                 }}
+                onPress={() => {
+                  navigation.navigate(
+                    getNavigationKey(["chat", "selectLanguage"]),
+                    {
+                      pageTitle: "학습 언어",
+                      onSelect: setFieldValue,
+                      selectedLanguageWantToLearn: values.languageWantToLearn
+                    }
+                  );
+                }}
               >
                 <Text style={styles.sectionTitle}>학습 언어</Text>
                 <Text
@@ -169,7 +174,7 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  한국어 KR
+                  {values.languageWantToLearn}
                 </Text>
               </TouchableOpacity>
               <View
@@ -182,19 +187,11 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                 <Slider
                   minimumValue={0}
                   maximumValue={4}
-                  value={fluency}
+                  value={values.fluency}
                   step={1}
                   minimumTrackTintColor={colors.primary}
                   maximumTrackTintColor={colors.gray}
-                  onValueChange={value => {
-                    this.setState(prev => ({
-                      ...prev,
-                      form: {
-                        ...prev.form,
-                        fluency: value
-                      }
-                    }));
-                  }}
+                  onValueChange={value => setFieldValue("fluency", value)}
                   style={{
                     width: "100%"
                   }}
@@ -213,7 +210,10 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                       key={level}
                       style={{
                         fontSize: 18,
-                        color: index <= fluency ? colors.primary : colors.black
+                        color:
+                          index <= values.fluency
+                            ? colors.primary
+                            : colors.black
                       }}
                     >
                       {level}
@@ -244,6 +244,7 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                   borderRadius: 3,
                   marginBottom: 32
                 }}
+                onPress={handleReset}
               >
                 <Text style={{ color: colors.white, fontSize: 20 }}>
                   재설정
@@ -287,17 +288,9 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                   }}
                 >
                   <Picker
-                    selectedValue={ageMin}
+                    selectedValue={values.ageMin}
                     style={{ width: "50%", height: 50 }}
-                    onValueChange={itemValue => {
-                      this.setState(prev => ({
-                        ...prev,
-                        form: {
-                          ...prev.form,
-                          ageMin: itemValue
-                        }
-                      }));
-                    }}
+                    onValueChange={value => setFieldValue("ageMin", value)}
                   >
                     {range(18, 91).map(age => (
                       <Picker.Item
@@ -308,17 +301,9 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                     ))}
                   </Picker>
                   <Picker
-                    selectedValue={ageMax}
+                    selectedValue={values.ageMax}
                     style={{ width: "50%", height: 50 }}
-                    onValueChange={itemValue => {
-                      this.setState(prev => ({
-                        ...prev,
-                        form: {
-                          ...prev.form,
-                          ageMax: itemValue
-                        }
-                      }));
-                    }}
+                    onValueChange={value => setFieldValue("ageMax", value)}
                   >
                     {range(18, 91).map(age => (
                       <Picker.Item
@@ -343,7 +328,7 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                       취소
                     </Text>
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => this.toggleModal("age")}>
                     <Text
                       style={{
                         fontSize: 18,

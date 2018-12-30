@@ -29,13 +29,13 @@ class ChatSelectCountry extends React.Component<NavigationScreenProps, State> {
     const { navigation } = this.props;
 
     navigation.goBack();
-    navigation.getParam("onSelect", () => {})(country);
+    navigation.getParam("onSelect", () => {})("country", country);
   };
 
   // TODO: Orientation 변화에 따라서 글자의 maxWidth를 변화시켜야 함.
   // use onLayout event (https://facebook.github.io/react-native/docs/view#onlayout)
   render() {
-    const ROW_HEIGHT = 60;
+    const ROW_HEIGHT = 80;
 
     const styles = StyleSheet.create({
       listItemContainer: {
@@ -48,7 +48,7 @@ class ChatSelectCountry extends React.Component<NavigationScreenProps, State> {
       },
       listItemTitle: {
         fontSize: 20,
-        maxWidth: Dimensions.get("window").width / 2 - 32
+        maxWidth: Dimensions.get("window").width - 100
       },
       listItemFlag: {
         width: 30,
@@ -101,7 +101,7 @@ class ChatSelectCountry extends React.Component<NavigationScreenProps, State> {
                   <Flag code={item.code} style={styles.listItemFlag} />
                   <Text
                     style={styles.listItemTitle}
-                    numberOfLines={1}
+                    numberOfLines={2}
                     ellipsizeMode="tail"
                   >
                     {item.name}

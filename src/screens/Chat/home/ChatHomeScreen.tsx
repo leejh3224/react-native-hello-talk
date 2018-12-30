@@ -59,9 +59,10 @@ const ChatHomeScreen = {
             <MenuOption
               style={styles.boxListItem}
               value={2}
-              onSelect={() =>
-                navigation.navigate(getNavigationKey(["chat", "create"]))
-              }
+              onSelect={() => {
+                navigation.navigate(getNavigationKey(["chat", "create"]));
+                props.setBottomTabBarVisibility(false);
+              }}
             >
               <MaterialCommunityIcons
                 name="comment-multiple-outline"

@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Text, TouchableOpacity } from "react-native";
-import { NavigationScreenProps } from "react-navigation";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { NavigationScreenProps, HeaderBackButton } from "react-navigation";
 import { connect } from "react-redux";
 import uuid from "uuid/v4";
 import isEqual from "lodash.isequal";
@@ -75,8 +75,40 @@ const ChatCreateScreen = {
       { setBottomTabBarVisibility, createChatRequest: createChat.request }
     )(OKButton);
 
+    const styles = StyleSheet.create({
+      titleContainer: {
+        flex: 1,
+        alignItems: "flex-start"
+      },
+      title: {
+        fontSize: 24,
+        fontWeight: "bold"
+      }
+    });
+
+    const BackButton = props => {
+      return (
+        <HeaderBackButton
+          onPress={() => {
+            navigation.navigate(getNavigationKey(["chat", "home"]));
+            props.setBottomTabBarVisibility(true);
+          }}
+        />
+      );
+    };
+
+    const ConnectedBackButton = connect(
+      null,
+      { setBottomTabBarVisibility }
+    )(BackButton);
+
     return {
-      title: "create",
+      headerLeft: <ConnectedBackButton />,
+      headerTitle: (
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>선택</Text>
+        </View>
+      ),
       headerRight: <ConnectedOKButton />
     };
   }
