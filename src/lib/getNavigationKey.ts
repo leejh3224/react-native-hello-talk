@@ -18,6 +18,7 @@ const getNavigationKey = (path: string[]) => {
       room: string;
       selectCountry: string;
       selectLanguage: string;
+      friendsList: string;
     };
     [key: string]: string | object;
   }
@@ -34,7 +35,8 @@ const getNavigationKey = (path: string[]) => {
       home: "@chat/home",
       room: "@chat/room",
       selectCountry: "@chat/selectCountry",
-      selectLanguage: "@chat/selectLanguage"
+      selectLanguage: "@chat/selectLanguage",
+      friendsList: "@chat/friendsList"
     }
   };
 
@@ -50,7 +52,8 @@ const getNavigationKey = (path: string[]) => {
     "home",
     "room",
     "selectCountry",
-    "selectLanguage"
+    "selectLanguage",
+    "friendsList"
   ];
 
   if (path.every(element => availableKeys.includes(element))) {

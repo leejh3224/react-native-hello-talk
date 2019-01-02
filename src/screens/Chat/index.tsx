@@ -6,7 +6,8 @@ import { ChatCreateScreen } from "./create";
 import {
   ChatFindFriendScreen,
   ChatSelectCountryScreen,
-  ChatSelectLanguageScreen
+  ChatSelectLanguageScreen,
+  ChatFriendsListScreen
 } from "./findFriend";
 
 const {
@@ -15,7 +16,8 @@ const {
   home,
   room,
   selectCountry,
-  selectLanguage
+  selectLanguage,
+  friendsList
 } = getNavigationKey(["chat"]);
 
 export default createStackNavigator(
@@ -25,7 +27,8 @@ export default createStackNavigator(
     [create]: ChatCreateScreen,
     [findFriend]: ChatFindFriendScreen,
     [selectCountry]: ChatSelectCountryScreen,
-    [selectLanguage]: ChatSelectLanguageScreen
+    [selectLanguage]: ChatSelectLanguageScreen,
+    [friendsList]: ChatFriendsListScreen
   },
   {
     initialRouteName: home,

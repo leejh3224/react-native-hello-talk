@@ -56,6 +56,9 @@ const ChatFindFriendScreen = {
         <TextInput
           placeholder="사용자 이름/언어 (예: kr)"
           style={styles.input}
+          onChangeText={text => {
+              navigation.setParams({ findFriendKeyword: text })
+          }}
         />
       ),
       headerRight: null

@@ -1,3 +1,9 @@
+/**
+ * Android polyfill for js intl class
+ * https://github.com/facebook/react-native/issues/15382
+ */
+import "intl";
+import "intl/locale-data/jsonp/ko";
 import * as React from "react";
 import {
   createBottomTabNavigator,

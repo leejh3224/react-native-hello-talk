@@ -40,21 +40,28 @@ class ChatRoom extends React.Component<Props, State> {
   state = {
     chatId: "",
     text: "",
-    uploadMenuBarVisible: false
+    uploadMenuBarVisible: false,
+    keyboardVisible: false
   };
 
   private sectionList!: SectionList<IMessage>;
   private keyboardDidShowListener!: EmitterSubscription;
+  private keyboardDidHideListener!: EmitterSubscription;
 
   componentDidMount = () => {
     this.keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       this.keyboardDidShow
     );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      this.keyboardDidHide
+    );
   };
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
   }
 
   // TODO: add animation for hiding uploadMenuBar
@@ -76,6 +83,18 @@ class ChatRoom extends React.Component<Props, State> {
     if (this.state.uploadMenuBarVisible) {
       this.toggleUploadMenuBar();
     }
+
+    this.setState(prev => ({
+      ...prev,
+      keyboardVisible: true
+    }));
+  };
+
+  keyboardDidHide = () => {
+    this.setState(prev => ({
+      ...prev,
+      keyboardVisible: false
+    }));
   };
 
   askCameraRollPermission = async () => {
@@ -168,6 +187,7 @@ class ChatRoom extends React.Component<Props, State> {
     const isIPhoneX =
       Platform.OS === "ios" &&
       (dimension.height > 800 || dimension.width > 800);
+    const { keyboardVisible } = this.state;
 
     const styles = StyleSheet.create({
       container: {
@@ -190,11 +210,16 @@ class ChatRoom extends React.Component<Props, State> {
         padding: 8,
         backgroundColor: colors.white,
         paddingBottom: isIPhoneX ? 36 : 8,
-        flexDirection: "row"
+        flexDirection: "row",
+        // textInput inside View not responding correctly in android
+        // https://github.com/facebook/react-native/issues/16826
+        flex: Platform.OS === "android" && keyboardVisible ? 1 : 0,
+        alignItems: "flex-start"
       },
       textInput: {
         borderRadius: 20,
         padding: 8,
+        paddingLeft: 16,
         backgroundColor: colors.white,
         borderColor: colors.gray,
         borderWidth: 0.5,
@@ -202,7 +227,7 @@ class ChatRoom extends React.Component<Props, State> {
         marginRight: 8
       },
       uploadMenuIconButton: {
-        alignSelf: "center",
+        alignSelf: "flex-start",
         marginRight: 8
       },
       uploadMenuBarContainer: {
@@ -254,7 +279,7 @@ class ChatRoom extends React.Component<Props, State> {
           >
             <MaterialCommunityIcons
               name="plus-circle-outline"
-              size={28}
+              size={32}
               color={
                 this.state.uploadMenuBarVisible ? colors.primary : colors.gray
               }
