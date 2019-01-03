@@ -10,7 +10,9 @@ import {
 import { NavigationScreenProps } from "react-navigation";
 import { Formik, FormikProps } from "formik";
 import { colors } from "theme";
-import { getNavigationKey } from "lib";
+import { getNavigationKey, languages } from "lib";
+import { ScaleBar } from "components";
+import { Language } from "models/Language";
 import FormSection from "./FormSection";
 import NumberPickerModal from "./NumberPickerModal";
 
@@ -27,8 +29,8 @@ interface FormValues {
   ageMin: number;
   ageMax: number;
   country: string;
-  language: string;
-  languageWantToLearn: string;
+  language: Language;
+  languageWantToLearn: Language;
   fluency: number;
 }
 
@@ -122,19 +124,27 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
       }
     });
 
+    const fluencyMap = ["초보", "기초", "중급", "고급", "능숙"];
+
     /**
      * Picker Component resets when items list changes
      * It happens when Picker.Item changes. Doesn't have a solution now
      * https://github.com/facebook/react-native/issues/13351
      */
+    const english = {
+      englishName: "English",
+      originalName: "English",
+      code: "EN"
+    };
+
     return (
       <Formik
         initialValues={{
           ageMin: 18,
           ageMax: 90,
           country: "모든",
-          language: "English",
-          languageWantToLearn: "English",
+          language: english,
+          languageWantToLearn: english,
           fluency: 4
         }}
         onSubmit={this.onSubmit}
@@ -174,7 +184,14 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                 })
               }
               name="모국어"
-              value={values.language}
+              value={`${values.language.originalName} ${values.language.code}`}
+              displayElement={
+                <ScaleBar
+                  label={values.language.code}
+                  scale={4}
+                  barColor={colors.secondary}
+                />
+              }
             />
 
             <View
@@ -194,7 +211,16 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                   })
                 }
                 name="학습 언어"
-                value={values.languageWantToLearn}
+                value={`${values.languageWantToLearn.originalName} ${
+                  values.languageWantToLearn.code
+                }`}
+                displayElement={
+                  <ScaleBar
+                    label={values.languageWantToLearn.code}
+                    scale={values.fluency}
+                    barColor={colors.primary}
+                  />
+                }
                 containerStyle={styles.sliderSectionContainer}
               />
               <View style={styles.sliderContainer}>
@@ -210,22 +236,18 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
                 />
               </View>
               <View style={styles.sliderLabelContainer}>
-                {["초보", "기초", "중급", "고급", "능숙"].map(
-                  (level, index) => (
-                    <Text
-                      key={level}
-                      style={{
-                        fontSize: 18,
-                        color:
-                          index <= values.fluency
-                            ? colors.primary
-                            : colors.black
-                      }}
-                    >
-                      {level}
-                    </Text>
-                  )
-                )}
+                {fluencyMap.map((level, index) => (
+                  <Text
+                    key={level}
+                    style={{
+                      fontSize: 18,
+                      color:
+                        index <= values.fluency ? colors.primary : colors.black
+                    }}
+                  >
+                    {level}
+                  </Text>
+                ))}
               </View>
             </View>
 

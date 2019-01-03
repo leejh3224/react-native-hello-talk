@@ -7,17 +7,17 @@ export default [
   {
     englishName: "Chinese Simplified",
     originalName: "中文(简体)",
-    code: "ZH-HANS"
+    code: "ZH"
   },
   {
     englishName: "Chinese Traditional",
     originalName: "中文(繁体)",
-    code: "ZH-HANT"
+    code: "ZH"
   },
   {
     englishName: "Cantonese",
     originalName: "广东话",
-    code: "ZH_YUE"
+    code: "ZH"
   },
   {
     englishName: "Japanese",

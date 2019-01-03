@@ -5,11 +5,12 @@ import {
   TextStyle,
   View,
   Image,
-  ImageStyle,
+  ImageStyle
 } from "react-native";
 import { createStackNavigator } from "react-navigation";
 import Flag from "react-native-round-flags";
 import { colors } from "theme";
+import { ScaleBar } from "components";
 import Home from "./home";
 
 export default createStackNavigator(
@@ -19,31 +20,6 @@ export default createStackNavigator(
   {
     initialRouteName: "Home",
     navigationOptions: () => {
-      const ScaleBar = ({ scale, barColor }) => {
-        const scaleBarStyles = StyleSheet.create({
-          container: {
-            width: 40,
-            height: 5,
-            backgroundColor: colors.lightGray,
-            borderRadius: 5,
-            position: "relative"
-          },
-          bar: {
-            width: 8 * scale,
-            backgroundColor: barColor,
-            height: 5,
-            borderRadius: 5,
-            position: "absolute"
-          }
-        });
-
-        return (
-          <View style={scaleBarStyles.container}>
-            <View style={scaleBarStyles.bar} />
-          </View>
-        );
-      };
-
       const styles = StyleSheet.create({
         navBarTitle: {
           fontSize: 32,
@@ -154,15 +130,9 @@ export default createStackNavigator(
                   marginBottom: 8
                 }}
               >
-                <View>
-                  <Text style={{ fontWeight: "600" }}>EN</Text>
-                  <ScaleBar scale={5} barColor={colors.primary} />
-                </View>
+                <ScaleBar label="EN" scale={5} barColor={colors.primary} />
                 <Text style={{ marginHorizontal: 8 }}>></Text>
-                <View>
-                  <Text style={{ fontWeight: "600" }}>KR</Text>
-                  <ScaleBar scale={1} barColor={colors.secondary} />
-                </View>
+                <ScaleBar label="KR" scale={1} barColor={colors.secondary} />
               </View>
               <Text style={styles.profileDescription}>@ID: 102924242433</Text>
               <Text style={styles.profileDescription}>Seoul, Korea</Text>

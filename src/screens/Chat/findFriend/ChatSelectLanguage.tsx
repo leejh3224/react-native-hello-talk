@@ -10,9 +10,10 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { NavigationScreenProps } from "react-navigation";
 import { languages } from "lib";
 import { colors } from "theme";
+import { Language } from "models/Language";
 
 interface State {
-  selectedLanguage: string;
+  selectedLanguage: Language;
 }
 
 class ChatSelectLanguage extends React.Component<NavigationScreenProps, State> {
@@ -25,7 +26,7 @@ class ChatSelectLanguage extends React.Component<NavigationScreenProps, State> {
     };
   }
 
-  handleSelect = (language: string) => {
+  handleSelect = (language: Language) => {
     const { navigation } = this.props;
 
     navigation.goBack();
@@ -52,6 +53,8 @@ class ChatSelectLanguage extends React.Component<NavigationScreenProps, State> {
       }
     });
 
+    const { selectedLanguage } = this.state;
+
     return (
       <View>
         <FlatList
@@ -59,14 +62,12 @@ class ChatSelectLanguage extends React.Component<NavigationScreenProps, State> {
           renderItem={({ item }) => {
             return (
               <View style={styles.listItemContainer}>
-                <TouchableOpacity
-                  onPress={() => this.handleSelect(item.originalName)}
-                >
+                <TouchableOpacity onPress={() => this.handleSelect(item)}>
                   <Text
                     style={{
                       fontSize: 20,
                       color:
-                        this.state.selectedLanguage === item.originalName
+                        selectedLanguage.originalName === item.originalName
                           ? colors.black
                           : colors.gray
                     }}
@@ -75,7 +76,7 @@ class ChatSelectLanguage extends React.Component<NavigationScreenProps, State> {
                   </Text>
                   <Text style={styles.listItemText}>{item.originalName}</Text>
                 </TouchableOpacity>
-                {this.state.selectedLanguage === item.originalName && (
+                {selectedLanguage.originalName === item.originalName && (
                   <MaterialCommunityIcons
                     name="check"
                     size={28}

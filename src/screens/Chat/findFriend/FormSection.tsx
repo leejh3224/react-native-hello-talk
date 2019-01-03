@@ -1,20 +1,27 @@
 import * as React from "react";
-import { TouchableOpacity, Text, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Dimensions
+} from "react-native";
 import { colors } from "theme";
 
 interface Props {
   onPress: any;
   name: string;
-  value: any;
+  value?: string;
   containerStyle?: any;
-  formComponent?: any;
+  displayElement?: React.ReactNode;
 }
 
 const FormSection: React.SFC<Props> = ({
   onPress,
   name,
   value,
-  containerStyle
+  containerStyle,
+  displayElement
 }) => {
   const styles = StyleSheet.create({
     container: {
@@ -42,9 +49,13 @@ const FormSection: React.SFC<Props> = ({
       onPress={onPress}
     >
       <Text style={styles.title}>{name}</Text>
-      <Text style={styles.description} numberOfLines={1} ellipsizeMode="tail">
-        {value}
-      </Text>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Text style={styles.description} numberOfLines={1} ellipsizeMode="tail">
+          {value}
+        </Text>
+        <View style={{ paddingRight: 8 }} />
+        {displayElement}
+      </View>
     </TouchableOpacity>
   );
 };

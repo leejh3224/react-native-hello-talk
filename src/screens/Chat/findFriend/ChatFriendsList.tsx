@@ -14,7 +14,8 @@ class ChatFriendsList extends React.Component<NavigationScreenProps> {
         filters.language === user.language &&
         filters.languageWantToLearn === user.languageWantToLearn &&
         filters.fluency >= user.fluency;
-      const matchesLocation = filters.location === user.location;
+      const matchesLocation =
+        filters.country === "모든" || filters.country === user.location;
 
       return matchesAge && matchesLanguage && matchesLocation;
     });
