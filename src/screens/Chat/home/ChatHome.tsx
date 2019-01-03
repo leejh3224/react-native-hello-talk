@@ -2,20 +2,19 @@ import * as React from "react";
 import {
   FlatList,
   View,
-  Image,
   StyleSheet,
   Text,
-  ImageStyle,
   TouchableOpacity
 } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 import { connect } from "react-redux";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getNavigationKey, getHoursAndMinutes } from "lib";
 import { colors } from "theme";
 import { AppState } from "store/modules";
 import { setBottomTabBarVisibility } from "store/modules/ui";
 import { Chat } from "models/Chat";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ProfileImage } from "components";
 
 interface Props extends NavigationScreenProps {
   setBottomTabBarVisibility: typeof setBottomTabBarVisibility;
@@ -30,16 +29,11 @@ class ChatHome extends React.Component<Props, {}> {
       container: {
         flex: 1,
         flexDirection: "row",
+        alignItems: "center",
         padding: 16,
         backgroundColor: colors.white,
         borderBottomColor: colors.gray,
         borderBottomWidth: 0.5
-      },
-      profileImage: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        marginRight: 16
       },
       contentContainer: {
         flex: 1,
@@ -75,12 +69,12 @@ class ChatHome extends React.Component<Props, {}> {
           this.props.setBottomTabBarVisibility(false);
         }}
       >
-        <Image
-          source={{
-            uri:
-              "https://www.profiletalent.com.au/wp-content/uploads/2017/05/profile-talent-ant-simpson-feature.jpg"
+        <ProfileImage
+          uri="https://www.profiletalent.com.au/wp-content/uploads/2017/05/profile-talent-ant-simpson-feature.jpg"
+          size={60}
+          containerStyle={{
+            marginRight: 16
           }}
-          style={styles.profileImage as ImageStyle}
         />
         <View style={styles.contentContainer}>
           <Text style={styles.title}>{item.title}</Text>

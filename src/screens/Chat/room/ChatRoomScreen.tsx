@@ -5,7 +5,6 @@ import {
   NavigationParams,
   HeaderBackButton
 } from "react-navigation";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { connect } from "react-redux";
 import { getNavigationKey, getHoursAndMinutes } from "lib";
 import { colors } from "theme";
@@ -74,32 +73,8 @@ const ConnectedBackButton = connect(
 const ChatRoomScreen = {
   screen: ChatRoom,
   navigationOptions: ({ navigation }: NavigationScreenProps) => {
-    const styles = StyleSheet.create({
-      container: {
-        flexDirection: "row",
-        alignItems: "center"
-      },
-      title: {
-        fontSize: 24,
-        fontWeight: "bold"
-      },
-      subtitle: {
-        color: colors.gray
-      }
-    });
-
     return {
-      headerLeft: <ConnectedBackButton navigation={navigation} />,
-      headerRight: (
-        <View style={{ ...(styles.container as object), marginRight: 16 }}>
-          <MaterialCommunityIcons
-            name="magnify"
-            size={32}
-            style={{ marginRight: 16 }}
-          />
-          <MaterialCommunityIcons name="settings" size={32} />
-        </View>
-      )
+      headerLeft: <ConnectedBackButton navigation={navigation} />
     };
   }
 };

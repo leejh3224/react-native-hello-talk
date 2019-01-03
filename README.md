@@ -73,19 +73,17 @@ Constants.extra.projectId === 'rn-hello-talk' // use extra field like this!
 
   - [x] send pictures/videos
 
-  - [ ] support translation
-
-  - [ ] find people to talk to
+  - [x] find people to talk to
 
 - Profile
 
-  - [ ] edit profile (image, description, etc)
+  - [x] edit profile (description, etc)
 
-  - [ ] logout
+  - [x] logout
 
 - Etc
 
-  - [ ] splash screen
+  - [x] splash screen
 
   - [ ] push messages ([FCM:firebase cloud messaging](https://firebase.google.com/docs/cloud-messaging/))
 

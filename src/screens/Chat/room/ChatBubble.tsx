@@ -1,6 +1,7 @@
 import * as React from "react";
-import { StyleSheet, Image, ImageStyle, View, Text } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { colors } from "theme";
+import { ProfileImage } from "components";
 import { getHoursAndMinutes } from "lib";
 
 const styles = StyleSheet.create({
@@ -8,13 +9,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 8,
-    alignSelf: "flex-start"
-  },
-  profileImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginHorizontal: 16,
     alignSelf: "flex-start"
   },
   messageContainer: {
@@ -49,7 +43,14 @@ class ChatBubble extends React.PureComponent<Props> {
     const { source, message, timestamp } = this.props;
     return (
       <View style={styles.container}>
-        <Image source={source} style={styles.profileImage as ImageStyle} />
+        <ProfileImage
+          uri={source.uri}
+          size={40}
+          containerStyle={{
+            marginHorizontal: 16,
+            alignSelf: "flex-start"
+          }}
+        />
         <View style={styles.messageContainer}>
           <Text style={styles.message}>{message}</Text>
         </View>

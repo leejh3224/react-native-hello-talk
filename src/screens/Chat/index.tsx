@@ -9,6 +9,7 @@ import {
   ChatSelectLanguageScreen,
   ChatFriendsListScreen
 } from "./findFriend";
+import { colors } from "theme";
 
 const {
   create,
@@ -32,6 +33,11 @@ export default createStackNavigator(
   },
   {
     initialRouteName: home,
-    navigationOptions: globalHeaderConfig
+    navigationOptions: {
+      headerStyle: {
+        ...globalHeaderConfig,
+        backgroundColor: colors.white
+      }
+    }
   }
 );

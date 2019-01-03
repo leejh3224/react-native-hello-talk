@@ -25,8 +25,7 @@ const ScaleBar: React.SFC<Props> = ({ label, scale, barColor }) => {
       position: "absolute"
     },
     label: {
-      fontSize: 14,
-      fontWeight: "600",
+      fontSize: 13,
       marginBottom: 4
     }
   });

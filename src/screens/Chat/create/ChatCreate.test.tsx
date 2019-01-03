@@ -43,7 +43,7 @@ it(`
   expect(filteredUser[0].name).toBe("John");
 
   // filter user by languageWantToLearn
-  textInput.simulate("changeText", "kr");
+  textInput.simulate("changeText", "Korean");
   filteredUser = instance.filterByKeyword(users);
   expect(filteredUser).toHaveLength(1);
   expect(filteredUser[0].languageWantToLearn).toBe("kr");

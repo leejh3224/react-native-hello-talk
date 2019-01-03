@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TextInput,
   FlatList,
-  ImageBackground,
   TouchableOpacity,
   ImageStyle
 } from "react-native";
@@ -15,6 +14,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import users from "mocks/users.json";
 import { colors } from "theme";
 import { User } from "models/User";
+import { ProfileImage, ScaleBar } from "components";
+import { languages } from "lib";
 
 interface ChatCreateState {
   selected: User[];
@@ -55,33 +56,31 @@ class ChatCreate extends React.Component<
       container: {
         flex: 1,
         flexDirection: "row",
-        padding: 16,
-        backgroundColor: colors.white,
-        borderBottomColor: colors.gray,
-        borderBottomWidth: 0.5
-      },
-      profileImage: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        marginRight: 16
+        backgroundColor: colors.white
       },
       overlay: {
         backgroundColor: `${colors.primary}80`,
         width: "100%",
         height: "100%",
-        borderRadius: 30,
+        borderRadius: 35,
         justifyContent: "center",
         alignItems: "center"
       },
       contentContainer: {
-        justifyContent: "center"
+        flex: 1,
+        flexDirection: "row",
+        borderBottomColor: colors.gray,
+        borderBottomWidth: 0.5,
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingRight: 16
       },
-      name: {
-        fontSize: 16,
-        fontWeight: "bold"
+      title: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 4
       },
-      location: {
+      description: {
         color: colors.gray
       }
     });
@@ -93,29 +92,55 @@ class ChatCreate extends React.Component<
         style={styles.container}
         onPress={() => this.handleSelectRow(item)}
       >
-        <ImageBackground
-          source={{
-            uri: item.profileImage
+        <ProfileImage
+          uri={item.profileImage}
+          size={70}
+          country={item.country}
+          containerStyle={{
+            margin: 16
           }}
-          style={styles.profileImage}
-          imageStyle={{ borderRadius: 30 }}
-        >
-          {selected.includes(item) && (
-            <View style={styles.overlay}>
-              <MaterialCommunityIcons
-                name="check"
-                size={32}
-                color={colors.white}
+          overlay={
+            selected.includes(item) && (
+              <View style={styles.overlay}>
+                <MaterialCommunityIcons
+                  name="check"
+                  size={32}
+                  color={colors.white}
+                />
+              </View>
+            )
+          }
+        />
+        <View style={styles.contentContainer}>
+          <View>
+            <Text style={styles.title}>{item.name}</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                marginBottom: 4
+              }}
+            >
+              <ScaleBar
+                label={
+                  languages.find(el => el.originalName === item.language)!.code
+                }
+                scale={item.fluency}
+                barColor={colors.secondary}
+              />
+              <Text style={{ marginHorizontal: 8 }}>></Text>
+              <ScaleBar
+                label={
+                  languages.find(
+                    el => el.originalName === item.languageWantToLearn
+                  )!.code
+                }
+                scale={item.fluency}
+                barColor={colors.primary}
               />
             </View>
-          )}
-        </ImageBackground>
-        <View style={styles.contentContainer}>
-          <Text style={styles.name}>{item.name}</Text>
-          <Text>
-            {item.language} > {item.languageWantToLearn}
-          </Text>
-          <Text style={styles.location}>{item.location}</Text>
+            <Text style={styles.description}>위치 정보 없음</Text>
+          </View>
+          <Text style={styles.description}>15 시간 전</Text>
         </View>
       </TouchableOpacity>
     );
@@ -186,26 +211,27 @@ class ChatCreate extends React.Component<
       <View style={styles.container}>
         <View style={styles.selectedPeopleContainer}>
           {this.state.selected.map((user: User) => (
-            <ImageBackground
+            <ProfileImage
               key={user.id}
-              source={{ uri: user.profileImage }}
-              style={{
-                ...(styles.profileImage as object),
+              uri={user.profileImage}
+              size={60}
+              country={user.country}
+              containerStyle={{
                 marginRight: 16
               }}
-              imageStyle={{ borderRadius: 30 }}
-            >
-              <TouchableOpacity
-                style={styles.badge}
-                onPress={() => this.handleSelectRow(user)}
-              >
-                <MaterialCommunityIcons
-                  name="minus"
-                  size={20}
-                  color={colors.white}
-                />
-              </TouchableOpacity>
-            </ImageBackground>
+              overlay={
+                <TouchableOpacity
+                  style={styles.badge}
+                  onPress={() => this.handleSelectRow(user)}
+                >
+                  <MaterialCommunityIcons
+                    name="minus"
+                    size={20}
+                    color={colors.white}
+                  />
+                </TouchableOpacity>
+              }
+            />
           ))}
           <Image
             source={{

@@ -4,9 +4,10 @@ export interface User {
   description: string;
   gender: string;
   profileImage: string;
-  location: string;
+  country: string;
   language: string;
   languageWantToLearn: string;
   lastActiveTime: string;
+  fluency: number;
   feeds: any[];
 }

@@ -10,7 +10,7 @@ import {
 import { NavigationScreenProps } from "react-navigation";
 import { Formik, FormikProps } from "formik";
 import { colors } from "theme";
-import { getNavigationKey, languages } from "lib";
+import { getNavigationKey } from "lib";
 import { ScaleBar } from "components";
 import { Language } from "models/Language";
 import FormSection from "./FormSection";
@@ -85,6 +85,12 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
     const { modalVisible, ageMin, ageMax } = this.state;
 
     const styles = StyleSheet.create({
+      sectionContainer: {
+        backgroundColor: colors.white,
+        padding: 24,
+        borderBottomColor: colors.gray,
+        borderBottomWidth: 0.5
+      },
       sliderSectionContainer: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -126,17 +132,17 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
 
     const fluencyMap = ["초보", "기초", "중급", "고급", "능숙"];
 
-    /**
-     * Picker Component resets when items list changes
-     * It happens when Picker.Item changes. Doesn't have a solution now
-     * https://github.com/facebook/react-native/issues/13351
-     */
     const english = {
       englishName: "English",
       originalName: "English",
       code: "EN"
     };
 
+    /**
+     * Picker Component resets when items list changes
+     * It happens when Picker.Item changes. Doesn't have a solution now
+     * https://github.com/facebook/react-native/issues/13351
+     */
     return (
       <Formik
         initialValues={{
@@ -194,14 +200,7 @@ class ChatFindFriend extends React.Component<NavigationScreenProps, State> {
               }
             />
 
-            <View
-              style={{
-                backgroundColor: colors.white,
-                padding: 24,
-                borderBottomColor: colors.gray,
-                borderBottomWidth: 0.5
-              }}
-            >
+            <View style={styles.sectionContainer}>
               <FormSection
                 onPress={() =>
                   this.onPressSection("selectLanguage", {
