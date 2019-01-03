@@ -1,31 +1,22 @@
 import * as React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import {
-  NavigationScreenProps,
-  NavigationParams,
-  HeaderBackButton
-} from "react-navigation";
+import { NavigationParams, NavigationScreenProps } from "react-navigation";
 import { connect } from "react-redux";
-import { getNavigationKey, getHoursAndMinutes } from "lib";
+import { getHoursAndMinutes } from "lib";
 import { colors } from "theme";
-import { setBottomTabBarVisibility } from "store/modules/ui";
 import { AppState } from "store/modules";
 import { Chat } from "models/Chat";
+import { BackButton } from "components";
 import ChatRoom from "./ChatRoom";
 
-interface BackButtonProps {
+interface HeaderLeftProps {
   navigation: NavigationParams;
-  setBottomTabBarVisibility: typeof setBottomTabBarVisibility;
   chats: {
     [key: string]: Chat;
   };
 }
 
-const BackButton: React.SFC<BackButtonProps> = ({
-  navigation,
-  chats,
-  ...props
-}) => {
+const HeaderLeft: React.SFC<HeaderLeftProps> = ({ navigation, chats }) => {
   const styles = StyleSheet.create({
     container: {
       flexDirection: "row",
@@ -45,12 +36,7 @@ const BackButton: React.SFC<BackButtonProps> = ({
 
   return (
     <View style={styles.container}>
-      <HeaderBackButton
-        onPress={() => {
-          navigation.navigate(getNavigationKey(["chat", "home"]));
-          props.setBottomTabBarVisibility(true);
-        }}
-      />
+      <BackButton path={["chat", "home"]} showTabBar />
       <View>
         <Text style={styles.title}>{title}</Text>
         {timestamp && (
@@ -65,16 +51,16 @@ const mapStateToProps = (state: AppState) => ({
   chats: state.chats.chats
 });
 
-const ConnectedBackButton = connect(
+const ConnectedHeaderLeft = connect(
   mapStateToProps,
-  { setBottomTabBarVisibility }
-)(BackButton);
+  null
+)(HeaderLeft);
 
 const ChatRoomScreen = {
   screen: ChatRoom,
   navigationOptions: ({ navigation }: NavigationScreenProps) => {
     return {
-      headerLeft: <ConnectedBackButton navigation={navigation} />
+      headerLeft: <ConnectedHeaderLeft navigation={navigation} />
     };
   }
 };

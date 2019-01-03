@@ -1,10 +1,8 @@
 import * as React from "react";
 import { StyleSheet, TextInput } from "react-native";
-import { NavigationScreenProps, HeaderBackButton } from "react-navigation";
-import { connect } from "react-redux";
-import { setBottomTabBarVisibility } from "store/modules/ui";
-import { getNavigationKey } from "lib";
+import { NavigationScreenProps } from "react-navigation";
 import { colors } from "theme";
+import { BackButton } from "components";
 import ChatFindFriend from "./ChatFindFriend";
 
 const ChatFindFriendScreen = {
@@ -22,22 +20,6 @@ const ChatFindFriendScreen = {
       }
     });
 
-    const BackButton = props => {
-      return (
-        <HeaderBackButton
-          onPress={() => {
-            navigation.navigate(getNavigationKey(["chat", "home"]));
-            props.setBottomTabBarVisibility(true);
-          }}
-        />
-      );
-    };
-
-    const ConnectedBackButton = connect(
-      null,
-      { setBottomTabBarVisibility }
-    )(BackButton);
-
     return {
       headerStyle: {
         height: 70,
@@ -51,13 +33,13 @@ const ChatFindFriendScreen = {
         shadowRadius: 2.65,
         elevation: 3
       },
-      headerLeft: <ConnectedBackButton />,
+      headerLeft: <BackButton path={["chat", "home"]} showTabBar />,
       headerTitle: (
         <TextInput
           placeholder="사용자 이름/언어 (예: kr)"
           style={styles.input}
           onChangeText={text => {
-              navigation.setParams({ findFriendKeyword: text })
+            navigation.setParams({ findFriendKeyword: text });
           }}
         />
       ),
