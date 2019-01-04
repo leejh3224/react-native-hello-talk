@@ -10,7 +10,7 @@ import {
   ImageStyle
 } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import users from "mocks/users.json";
 import { colors } from "theme";
 import { User } from "models/User";

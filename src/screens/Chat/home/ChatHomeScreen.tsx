@@ -7,7 +7,7 @@ import {
   MenuOptions,
   MenuOption
 } from "react-native-popup-menu";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { setBottomTabBarVisibility } from "store/modules/ui";
 import { getNavigationKey } from "lib";

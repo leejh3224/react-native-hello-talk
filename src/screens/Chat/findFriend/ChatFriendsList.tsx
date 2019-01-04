@@ -1,11 +1,5 @@
 import * as React from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  TouchableOpacity
-} from "react-native";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 import { ProfileImage, ScaleBar } from "components";
 import users from "mocks/users.json";
@@ -40,7 +34,7 @@ class ChatFriendsList extends React.Component<NavigationScreenProps> {
     });
 
     return (
-      <TouchableOpacity style={styles.container}>
+      <View style={styles.container}>
         <ProfileImage
           uri={item.profileImage}
           size={70}
@@ -80,7 +74,7 @@ class ChatFriendsList extends React.Component<NavigationScreenProps> {
           </View>
           <Text style={styles.description}>15 시간 전</Text>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
 

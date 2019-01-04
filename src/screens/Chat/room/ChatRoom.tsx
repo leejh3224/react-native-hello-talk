@@ -13,7 +13,7 @@ import {
   EmitterSubscription
 } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { ImagePicker, Permissions } from "expo";
 import uuid from "uuid/v4";

@@ -9,7 +9,7 @@ import {
   createBottomTabNavigator,
   createStackNavigator
 } from "react-navigation";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MenuProvider } from "react-native-popup-menu";
 import { Provider } from "react-redux";
 import { ChatScreen, AuthScreen, ProfileScreen } from "screens";

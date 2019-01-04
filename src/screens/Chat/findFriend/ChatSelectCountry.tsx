@@ -8,7 +8,7 @@ import {
   Dimensions
 } from "react-native";
 import Flag from "react-native-round-flags";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { NavigationScreenProps, Header } from "react-navigation";
 import { countries } from "lib";
 import { colors } from "theme";
