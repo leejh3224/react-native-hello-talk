@@ -43,7 +43,7 @@ class ProfileHome extends React.Component<NavigationScreenProps> {
     });
 
     const { navigation } = this.props;
-    console.log(getNavigationKey(["profile", "editDescription"]));
+
     return (
       <ScrollView
         style={{
@@ -61,6 +61,7 @@ class ProfileHome extends React.Component<NavigationScreenProps> {
             navigation.navigate(
               getNavigationKey(["profile", "editDescription"])
             );
+            // setBottomTabVisibllity(false);
           }}
         >
           <Text style={styles.title as TextStyle}>자기 소개</Text>

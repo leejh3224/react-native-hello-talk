@@ -9,7 +9,7 @@ const getNavigationKey = (path: string[]) => {
     auth: {
       loading: string;
       login: string;
-      app: string;
+      register: string;
     };
     chat: {
       create: string;
@@ -31,7 +31,7 @@ const getNavigationKey = (path: string[]) => {
     auth: {
       loading: "@auth/loading",
       login: "@auth/login",
-      app: "@auth/app"
+      register: "@auth/register"
     },
     chat: {
       create: "@chat/create",
@@ -53,7 +53,7 @@ const getNavigationKey = (path: string[]) => {
     "auth",
     "loading",
     "login",
-    "app",
+    "register",
     "chat",
     "create",
     "findFriend",

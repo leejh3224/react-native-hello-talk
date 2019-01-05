@@ -10,7 +10,7 @@ import {
 export const colors = {
   primary: blue["800"],
   secondary: lightGreen["800"],
-  gray: grey["500"],
+  gray: grey["400"],
   lightGray: grey["100"],
   darkGray: grey["800"],
   warning: deepOrange["500"],

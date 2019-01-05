@@ -7,7 +7,7 @@ import "intl/locale-data/jsonp/ko";
 import * as React from "react";
 import {
   createBottomTabNavigator,
-  createStackNavigator
+  createSwitchNavigator
 } from "react-navigation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MenuProvider } from "react-native-popup-menu";
@@ -52,18 +52,17 @@ const MainFlow = createBottomTabNavigator(
       activeTintColor: colors.primary,
       inactiveTintColor: colors.gray
     },
-    initialRouteName: "Profile"
+    initialRouteName: "Chat"
   }
 );
 
-const App = createStackNavigator(
+const App = createSwitchNavigator(
   {
     Auth: AuthScreen,
     Main: MainFlow
   },
   {
-    initialRouteName: "Auth",
-    headerMode: "none"
+    initialRouteName: "Auth"
   }
 );
 

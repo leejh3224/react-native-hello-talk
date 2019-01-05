@@ -16,7 +16,7 @@ class AuthLoading extends React.Component<NavigationScreenProps> {
     const { navigation } = this.props;
 
     // TODO: remove development setting
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV !== "development") {
       return navigation.navigate(
         currentUser
           ? getNavigationKey(["auth", "login"])
@@ -58,7 +58,10 @@ class AuthLoading extends React.Component<NavigationScreenProps> {
 }
 
 export const AuthLoadingScreen = {
-  screen: AuthLoading
+  screen: AuthLoading,
+  navigationOptions: {
+    header: null
+  }
 };
 
 export default AuthLoading;

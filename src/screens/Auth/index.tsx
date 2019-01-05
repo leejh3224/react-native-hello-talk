@@ -2,16 +2,17 @@ import { createStackNavigator } from "react-navigation";
 import { getNavigationKey } from "lib";
 import { AuthLoadingScreen } from "./loading";
 import { AuthLoginScreen } from "./login";
+import { AuthRegisterScreen } from "./register";
 
-const { loading, login } = getNavigationKey(["auth"]);
+const { loading, login, register } = getNavigationKey(["auth"]);
 
 export default createStackNavigator(
   {
     [loading]: AuthLoadingScreen,
-    [login]: AuthLoginScreen
+    [login]: AuthLoginScreen,
+    [register]: AuthRegisterScreen
   },
   {
-    initialRouteName: loading,
-    headerMode: "none"
+    initialRouteName: login
   }
 );

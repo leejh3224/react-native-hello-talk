@@ -58,6 +58,7 @@ const ProfileHomeScreen = {
     return {
       headerStyle: {
         height: 150,
+        // no-bottom-shadow
         shadowColor: "transparent",
         elevation: 0,
         borderBottomWidth: 0,
