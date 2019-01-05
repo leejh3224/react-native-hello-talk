@@ -14,7 +14,13 @@ import { NavigationScreenProps } from "react-navigation";
 class ProfileHome extends React.Component<NavigationScreenProps> {
   logout = async () => {
     try {
+      const { navigation } = this.props;
+
       await firebase.auth().signOut();
+
+      if (!firebase.auth().currentUser) {
+        navigation.navigate(getNavigationKey(["auth", "login"]));
+      }
     } catch (error) {
       console.log(error);
     }
@@ -68,10 +74,7 @@ class ProfileHome extends React.Component<NavigationScreenProps> {
           <Text style={styles.description}>Hello, everyone :)</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={{
-            ...(styles.container as object),
-            alignItems: "center"
-          }}
+          style={[styles.container, { alignItems: "center" }]}
           onPress={this.logout}
         >
           <Text style={styles.actionText}>로그아웃</Text>

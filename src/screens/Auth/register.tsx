@@ -10,24 +10,19 @@ import {
   FlatList,
   ScrollView
 } from "react-native";
-import { Localization } from 'expo-localization';
+import { Localization } from "expo-localization";
 import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import { Formik, FormikProps } from "formik";
 import * as firebase from "firebase";
 import { BackButton, BaseModal } from "components";
-import { globalHeaderConfig, getYearMonthAndDay, languages } from "lib";
+import {
+  globalHeaderConfig,
+  getYearMonthAndDay,
+  languages,
+  getNavigationKey
+} from "lib";
 import { colors } from "theme";
 import { NavigationScreenProps } from "react-navigation";
-
-interface FormValues {
-  name: string;
-  birthday: Date;
-  language: string;
-  languageWantToLearn: string;
-  gender: "male" | "female";
-  fluency: number;
-  [key: string]: string | number | Date;
-}
 
 const SectionIcon = ({ name, color }) => {
   const iconMap: any = {
@@ -52,7 +47,27 @@ const SectionIcon = ({ name, color }) => {
   );
 };
 
-class AuthRegister extends React.Component<NavigationScreenProps> {
+interface FormValues {
+  name: string;
+  birthday: Date;
+  language: string;
+  languageWantToLearn: string;
+  gender: "male" | "female";
+  fluency: number;
+  [key: string]: string | number | Date;
+}
+
+interface State {
+  textInputFocused: boolean;
+  modalVisible: {
+    birthday: boolean;
+    language: boolean;
+    languageWantToLearn: boolean;
+    [key: string]: boolean;
+  };
+}
+
+class AuthRegister extends React.Component<NavigationScreenProps, State> {
   state = {
     textInputFocused: false,
     modalVisible: {
@@ -103,9 +118,11 @@ class AuthRegister extends React.Component<NavigationScreenProps> {
             ...values,
             description: "",
             profileImage: user.photoURL,
-            lastActiveTime: 0,
+            lastActiveTime: Date.now(),
             country: Localization.country
           });
+
+        navigation.navigate(getNavigationKey(["chat", "home"]));
       }
     } catch (error) {
       console.log(error);
@@ -207,7 +224,12 @@ class AuthRegister extends React.Component<NavigationScreenProps> {
 
     return (
       <Formik initialValues={initialFormValues} onSubmit={this.onSubmit}>
-        {({ values, handleChange, setFieldValue }: FormikProps<FormValues>) => {
+        {({
+          values,
+          handleChange,
+          setFieldValue,
+          handleSubmit
+        }: FormikProps<FormValues>) => {
           const submitButtonEnabled = Object.keys(initialFormValues)
             .filter(key => !["gender", "fluency"].includes(key))
             .every(key => values[key] !== initialFormValues[key]);
@@ -222,13 +244,15 @@ class AuthRegister extends React.Component<NavigationScreenProps> {
                       onPress={() => this.toggleModal(title)}
                     >
                       <View
-                        style={{
-                          ...(styles.sectionContainer as object),
-                          borderBottomColor:
-                            textInputFocused && title === "name"
-                              ? colors.primary
-                              : colors.gray
-                        }}
+                        style={[
+                          styles.sectionContainer,
+                          {
+                            borderBottomColor:
+                              textInputFocused && title === "name"
+                                ? colors.primary
+                                : colors.gray
+                          }
+                        ]}
                       >
                         <SectionIcon
                           name={title}
@@ -258,7 +282,14 @@ class AuthRegister extends React.Component<NavigationScreenProps> {
               {/* ADD Fluency Slider */}
               <View style={styles.genderSectionContainer}>
                 {["male", "female"].map(gender => {
-                  const selected = values.gender === gender;
+                  const getOptionBackgroundColor = () => {
+                    if (values.gender === gender) {
+                      return gender === "male"
+                        ? colors.primary
+                        : colors.warning;
+                    }
+                    return colors.gray;
+                  };
 
                   return (
                     <TouchableWithoutFeedback
@@ -266,14 +297,12 @@ class AuthRegister extends React.Component<NavigationScreenProps> {
                       onPress={() => setFieldValue("gender", gender)}
                     >
                       <View
-                        style={{
-                          ...(styles.genderSectionOption as object),
-                          backgroundColor: selected
-                            ? gender === "male"
-                              ? colors.primary
-                              : colors.warning
-                            : colors.gray
-                        }}
+                        style={[
+                          styles.genderSectionOption,
+                          {
+                            backgroundColor: getOptionBackgroundColor()
+                          }
+                        ]}
                       >
                         <MaterialCommunityIcons
                           name={`human-${gender}`}
@@ -286,11 +315,12 @@ class AuthRegister extends React.Component<NavigationScreenProps> {
                 })}
               </View>
               <TouchableOpacity
-                style={{
-                  ...(styles.submitButton as object),
-                  opacity: submitButtonEnabled ? 1 : 0.3
-                }}
+                style={[
+                  styles.submitButton,
+                  { opacity: submitButtonEnabled ? 1 : 0.3 }
+                ]}
                 disabled={!submitButtonEnabled}
+                onPress={handleSubmit as any}
               >
                 <Text style={{ fontSize: 20, color: colors.white }}>완료</Text>
               </TouchableOpacity>
