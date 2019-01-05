@@ -36,10 +36,10 @@ const NumberPickerModal: React.SFC<Props> = ({
       alignItems: Platform.OS === "android" ? "center" : "flex-start",
       height: Platform.OS === "android" ? 100 : 200
     },
+    picker: { width: "50%", height: 75 },
     actionButton: {
       alignSelf: "flex-end"
     },
-    picker: { width: "50%", height: 75 },
     actionText: {
       fontSize: 18,
       fontWeight: "bold",

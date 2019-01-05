@@ -13,6 +13,6 @@ export default createStackNavigator(
     [register]: AuthRegisterScreen
   },
   {
-    initialRouteName: login
+    initialRouteName: register
   }
 );

@@ -732,6 +732,11 @@
     "@types/cheerio" "*"
     "@types/react" "*"
 
+"@types/expo-localization@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/expo-localization/-/expo-localization-1.0.0.tgz#56f62d98542c7210553ba5b6c429b198c3d4cfdc"
+  integrity sha512-aealeX5Nh+K+Ag/40oiz9YnSBGB/050Nmq/hUIej1Ij/soE5SxAwg48glNFBIlw2aj2AARZ25GiA3r897h75SQ==
+
 "@types/expo@30.0.0":
   version "30.0.0"
   resolved "https://registry.yarnpkg.com/@types/expo/-/expo-30.0.0.tgz#fb19a1148b8d3136bf31cdc2ea09baa81b282a36"

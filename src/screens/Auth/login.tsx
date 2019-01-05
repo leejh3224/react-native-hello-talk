@@ -24,7 +24,7 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
 
   signIn = async () => {
     try {
-      const { user } = (await this.requestOAuth()) as any;
+      const { user } = await this.requestOAuth();
 
       if (user) {
         const { navigation } = this.props;
@@ -37,7 +37,9 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
         if (firebaseUser.exists()) {
           navigation.navigate(getNavigationKey(["chat", "home"]));
         } else {
-          navigation.navigate(getNavigationKey(["auth", "register"]));
+          navigation.navigate(getNavigationKey(["auth", "register"]), {
+            userData: user
+          });
         }
       }
     } catch (error) {

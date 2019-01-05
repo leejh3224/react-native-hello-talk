@@ -63,7 +63,7 @@ Constants.extra.projectId === 'rn-hello-talk' // use extra field like this!
 
   - [x] login using googleOAuth
 
-  - [ ] additional register flow
+  - [x] additional register flow
 
 - Chat
 
