@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Text, StyleSheet, TextStyle, View, Image } from "react-native";
+import { View, Text, StyleSheet, TextStyle } from "react-native";
 import { colors } from "theme";
-import { ScaleBar, ProfileImage } from "components";
 import ProfileHome from "./ProfileHome";
+import ProfileBox from "./ProfileBox";
 
 const ProfileHomeScreen = {
   screen: ProfileHome,
@@ -20,9 +20,9 @@ const ProfileHomeScreen = {
         flex: 1,
         borderRadius: 10,
         backgroundColor: colors.white,
-        padding: 16,
+        paddingHorizontal: 32,
+        paddingVertical: 16,
         marginTop: 16,
-        flexDirection: "row",
         // shadow
         shadowColor: colors.black,
         shadowOffset: {
@@ -35,29 +35,13 @@ const ProfileHomeScreen = {
         position: "absolute",
         top: 56,
         alignSelf: "center",
-        alignItems: "center"
-      },
-      profileTitle: {
-        fontSize: 20,
-        fontWeight: "bold",
-        marginBottom: 8,
-        maxWidth: 180
-      },
-      profileDescription: {
-        fontSize: 14,
-        color: colors.gray
-      },
-      scaleBar: {
-        width: 40,
-        height: 5,
-        backgroundColor: colors.gray,
-        borderRadius: 5
+        justifyContent: "center"
       }
     });
 
     return {
       headerStyle: {
-        height: 150,
+        height: 180,
         // no-bottom-shadow
         shadowColor: "transparent",
         elevation: 0,
@@ -65,34 +49,10 @@ const ProfileHomeScreen = {
         backgroundColor: colors.primary
       },
       headerLeft: <Text style={styles.navBarTitle as TextStyle}>프로필</Text>,
+      // Profile
       headerTitle: (
         <View style={styles.profileContainer}>
-          <ProfileImage
-            uri="https://m.media-amazon.com/images/M/MV5BMjM3MjM3NTAxM15BMl5BanBnXkFtZTgwMTY0Nzg2OTE@._V1_UX214_CR0,0,214,317_AL_.jpg"
-            size={80}
-            country="DE"
-            containerStyle={{
-              marginRight: 16
-            }}
-          />
-          <View>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.profileTitle} numberOfLines={2}>
-                정수한무두루미와도깨비알라알리알라셩알라리알라
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                marginBottom: 8
-              }}
-            >
-              <ScaleBar label="EN" scale={4} barColor={colors.primary} />
-              <Text style={{ marginHorizontal: 8 }}>></Text>
-              <ScaleBar label="KR" scale={1} barColor={colors.secondary} />
-            </View>
-            <Text style={styles.profileDescription}>Seoul, Korea</Text>
-          </View>
+          <ProfileBox />
         </View>
       )
     };

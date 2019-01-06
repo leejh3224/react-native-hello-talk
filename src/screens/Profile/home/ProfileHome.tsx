@@ -7,9 +7,12 @@ import {
   TextStyle
 } from "react-native";
 import * as firebase from "firebase";
+import { connect } from "react-redux";
 import { colors } from "theme";
 import { getNavigationKey } from "lib";
 import { NavigationScreenProps } from "react-navigation";
+import { AppState } from "store/modules";
+import { setBottomTabBarVisibility } from "store/modules/ui";
 
 class ProfileHome extends React.Component<NavigationScreenProps> {
   logout = async () => {
@@ -18,10 +21,14 @@ class ProfileHome extends React.Component<NavigationScreenProps> {
 
       await firebase.auth().signOut();
 
-      if (!firebase.auth().currentUser) {
+      const isLoggedOut = !firebase.auth().currentUser;
+
+      if (isLoggedOut) {
+        // redirect to login page
         navigation.navigate(getNavigationKey(["auth", "login"]));
       }
     } catch (error) {
+      // TODO: add toast logout failure message
       console.log(error);
     }
   };
@@ -48,7 +55,7 @@ class ProfileHome extends React.Component<NavigationScreenProps> {
       }
     });
 
-    const { navigation } = this.props;
+    const { navigation, me } = this.props;
 
     return (
       <ScrollView
@@ -58,7 +65,7 @@ class ProfileHome extends React.Component<NavigationScreenProps> {
            * As `profile` has absolute position,
            * we need to manually add marginTop
            */
-          marginTop: 72
+          marginTop: 144
         }}
       >
         <TouchableOpacity
@@ -67,11 +74,11 @@ class ProfileHome extends React.Component<NavigationScreenProps> {
             navigation.navigate(
               getNavigationKey(["profile", "editDescription"])
             );
-            // setBottomTabVisibllity(false);
+            this.props.setBottomTabBarVisibility(false);
           }}
         >
           <Text style={styles.title as TextStyle}>자기 소개</Text>
-          <Text style={styles.description}>Hello, everyone :)</Text>
+          <Text style={styles.description}>{me.description}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.container, { alignItems: "center" }]}
@@ -84,4 +91,11 @@ class ProfileHome extends React.Component<NavigationScreenProps> {
   }
 }
 
-export default ProfileHome;
+const mapStateToProps = (state: AppState) => ({
+  me: state.auth.me
+});
+
+export default connect(
+  mapStateToProps,
+  { setBottomTabBarVisibility }
+)(ProfileHome);

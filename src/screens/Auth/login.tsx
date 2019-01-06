@@ -11,8 +11,10 @@ import {
 } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 import Toast from "react-native-easy-toast";
+import { connect } from "react-redux";
 import * as firebase from "firebase";
 import { getNavigationKey } from "lib";
+import { updateCurrentUser } from "store/modules/auth";
 import { colors } from "theme";
 import api from "api";
 import helloTalkImage from "../../../assets/images/hello-talk.png";
@@ -35,6 +37,10 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
           .once("value");
 
         if (firebaseUser.exists()) {
+          this.props.updateCurrentUser({
+            ...firebaseUser.val(),
+            lastActiveTime: Date.now()
+          });
           navigation.navigate(getNavigationKey(["chat", "home"]));
         } else {
           navigation.navigate(getNavigationKey(["auth", "register"]), {
@@ -50,8 +56,7 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
         loginInProgress: false
       }));
 
-      // react-native-easy-toast does not provide @types
-      (this.refs.errorToast as any).show(error.message);
+      (this.refs.errorToast as any).show("로그인 실패");
     }
   };
 
@@ -151,11 +156,16 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
   }
 }
 
+const ConnectedAuthLogin = connect(
+  null,
+  { updateCurrentUser }
+)(AuthLogin);
+
 export const AuthLoginScreen = {
-  screen: AuthLogin,
+  screen: ConnectedAuthLogin,
   navigationOptions: {
     header: null
   }
 };
 
-export default AuthLogin;
+export default ConnectedAuthLogin;
