@@ -12,15 +12,17 @@ import {
   Keyboard,
   EmitterSubscription
 } from "react-native";
+import * as firebase from "firebase";
 import { NavigationScreenProps } from "react-navigation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { ImagePicker, Permissions } from "expo";
 import uuid from "uuid/v4";
+import groupBy from "lodash.groupby";
 import { colors } from "theme";
 import { sendMessage } from "store/modules/chat";
-import { AppState } from "store/modules";
 import { Message as IMessage } from "models/Message";
+import { getYearMonthAndDay } from "lib";
 import ChatBubble from "./ChatBubble";
 
 interface Props extends NavigationScreenProps {
@@ -41,14 +43,16 @@ class ChatRoom extends React.Component<Props, State> {
     chatId: "",
     text: "",
     uploadMenuBarVisible: false,
-    keyboardVisible: false
+    keyboardVisible: false,
+    user: null,
+    messages: {}
   };
 
   private sectionList!: SectionList<IMessage>;
   private keyboardDidShowListener!: EmitterSubscription;
   private keyboardDidHideListener!: EmitterSubscription;
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     this.keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       this.keyboardDidShow
@@ -57,11 +61,53 @@ class ChatRoom extends React.Component<Props, State> {
       "keyboardDidHide",
       this.keyboardDidHide
     );
+
+    const { navigation } = this.props;
+    const user = firebase.auth().currentUser;
+    const firebaseUser = (await firebase
+      .database()
+      .ref(`users/${user.uid}`)
+      .once("value")).val();
+    const chatId = navigation.getParam("chatId");
+    const messagesRef = firebase
+      .database()
+      .ref(`messages/${chatId}`)
+      .orderByChild("timestamp");
+
+    this.setState(prev => ({
+      ...prev,
+      user: firebaseUser
+    }));
+
+    messagesRef.on("value", snap => {
+      if (snap.exists()) {
+        /**
+         * https://stackoverflow.com/questions/33893866/orderbychild-not-working-in-firebase
+         * Firebase sorting doesn't guarantee JSON order, it is determined by js interpreter
+         * so in order to preserve sorted order, we manually loop through snapshot
+         */
+        const ordered = {};
+
+        snap.forEach(s => {
+          ordered[s.key] = s.val();
+        });
+
+        this.setState(prev => ({
+          ...prev,
+          messages: ordered
+        }));
+      }
+    });
   };
 
   componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
+
+    const { navigation } = this.props;
+    const chatId = navigation.getParam("chatId");
+    const messagesRef = firebase.database().ref(`messages/${chatId}`);
+    messagesRef.off("value");
   }
 
   // TODO: add animation for hiding uploadMenuBar
@@ -150,17 +196,25 @@ class ChatRoom extends React.Component<Props, State> {
     }));
   };
 
-  handleSendMessage = () => {
+  handleSendMessage = async () => {
     const { sendMessageRequest, navigation } = this.props;
-    const { text } = this.state;
+    const { text, user } = this.state;
 
     const chatId = navigation.getParam("chatId", uuid());
+
+    /**
+     *  https://stackoverflow.com/questions/25611356/display-posts-in-descending-posted-order
+     *  Unfortunately, Firebase doesn't support DESC query.
+     *  Workaround for this can be using negative timestamp value.
+     */
+    const now = Date.now() * -1;
 
     sendMessageRequest({
       chatId,
       message: text,
-      sender: "lee",
-      timestamp: Date.now()
+      sender: user.name,
+      timestamp: now,
+      section: getYearMonthAndDay(now)
     });
 
     // clear the message
@@ -168,15 +222,19 @@ class ChatRoom extends React.Component<Props, State> {
   };
 
   handleRenderRow = ({ item }: { item: IMessage }) => {
-    // TODO: add check for which user's chat
+    const { user } = this.state;
+
+    if (!user) {
+      return null;
+    }
+
     return (
       <ChatBubble
         source={{
-          uri:
-            "https://m.media-amazon.com/images/M/MV5BMjM3MjM3NTAxM15BMl5BanBnXkFtZTgwMTY0Nzg2OTE@._V1_UX214_CR0,0,214,317_AL_.jpg"
+          uri: user.profileImage
         }}
         message={item.message}
-        timestamp={item.timestamp}
+        timestamp={item.timestamp * -1}
       />
     );
   };
@@ -252,14 +310,22 @@ class ChatRoom extends React.Component<Props, State> {
       }
     });
 
-    const { messages } = this.props;
+    const { messages } = this.state;
+    const sectionedMessages = Object.entries(groupBy(messages, "section")).map(
+      ([key, value]) => ({
+        title: key,
+        data: value
+      })
+    );
+
+    console.log(sectionedMessages);
 
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
         <SectionList
           inverted
           ref={ref => ((this.sectionList as any) = ref)}
-          sections={[{ title: "2018.12.17", data: Object.values(messages) }]}
+          sections={sectionedMessages}
           renderSectionFooter={({ section: { title, data } }) => {
             return data.length > 0 ? (
               <View style={{ alignSelf: "center" }}>
@@ -349,11 +415,7 @@ class ChatRoom extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: AppState, ownProps: Props) => ({
-  messages: state.chats.messages[ownProps.navigation.getParam("chatId")] || {}
-});
-
 export default connect(
-  mapStateToProps,
+  null,
   { sendMessageRequest: sendMessage.request }
 )(ChatRoom);

@@ -17,6 +17,7 @@
 		"formik": "^1.4.1",
 		"intl": "^1.2.5",
 		"lodash.get": "^4.4.2",
+		"lodash.groupby": "^4.6.0",
 		"lodash.isequal": "^4.5.0",
 		"lodash.range": "^3.2.0",
 		"material-colors": "^1.2.6",
@@ -31,6 +32,7 @@
 		"react-redux": "^6.0.0",
 		"redux": "^4.0.1",
 		"redux-saga": "^0.16.2",
+		"timeago.js": "^4.0.0-beta.2",
 		"typesafe-actions": "^2.0.4",
 		"uuid": "^3.3.2"
 	},
@@ -46,6 +48,7 @@
 		"@types/jest": "^23.3.8",
 		"@types/lodash": "^4.14.117",
 		"@types/lodash.get": "^4.4.4",
+		"@types/lodash.groupby": "^4.6.4",
 		"@types/lodash.isequal": "^4.5.3",
 		"@types/lodash.range": "^3.2.4",
 		"@types/react": "16.4.18",

@@ -9,5 +9,5 @@ export interface User {
   languageWantToLearn: string;
   lastActiveTime: string;
   fluency: number;
-  feeds: any[];
+  online: boolean;
 }

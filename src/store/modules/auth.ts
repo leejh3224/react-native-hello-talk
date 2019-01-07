@@ -42,7 +42,7 @@ const listenUserUpdates = () => {
   return eventChannel(emitter => {
     const userRef = firebase.database().ref("users");
 
-    userRef.on("value", (snapshot: any) => {
+    userRef.limitToFirst(50).on("value", (snapshot: any) => {
       emitter({ data: snapshot.val() });
     });
 

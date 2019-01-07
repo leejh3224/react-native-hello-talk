@@ -70,7 +70,7 @@ class ChatHome extends React.Component<Props, {}> {
         }}
       >
         <ProfileImage
-          uri="https://www.profiletalent.com.au/wp-content/uploads/2017/05/profile-talent-ant-simpson-feature.jpg"
+          uri={item.image}
           size={60}
           containerStyle={{
             marginRight: 16

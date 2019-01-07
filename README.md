@@ -75,6 +75,8 @@ Constants.extra.projectId === 'rn-hello-talk' // use extra field like this!
 
   - [x] find people to talk to
 
+  - [ ] add user online status
+
 - Profile
 
   - [x] edit profile (description, etc)

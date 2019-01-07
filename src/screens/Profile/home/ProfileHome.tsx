@@ -57,6 +57,10 @@ class ProfileHome extends React.Component<NavigationScreenProps> {
 
     const { navigation, me } = this.props;
 
+    if (!me) {
+      return null;
+    }
+
     return (
       <ScrollView
         style={{

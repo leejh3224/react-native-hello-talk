@@ -12,6 +12,7 @@ import { AppState } from "store/modules";
 import { Chat } from "models/Chat";
 import { BackButton } from "components";
 import ChatCreate from "./ChatCreate";
+import { colors } from "theme";
 
 const ChatCreateScreen = {
   screen: ChatCreate,
@@ -44,9 +45,11 @@ const ChatCreateScreen = {
               props.createChatRequest({
                 chatId: newChatId,
                 selected,
-                title: selected[0].name
+                title: selected[0].name,
+                image: selected[0].profileImage
               });
             }
+
             navigation.navigate(getNavigationKey(["chat", "room"]), {
               chatId: sameChatRoomExists || newChatId
             });
@@ -58,7 +61,8 @@ const ChatCreateScreen = {
             style={{
               marginRight: 16,
               fontSize: 20,
-              fontWeight: "bold"
+              fontWeight: "bold",
+              color: selected.length <= 0 ? colors.gray : colors.black
             }}
           >
             OK {selected.length > 0 && `(${selected.length})`}

@@ -9,9 +9,9 @@ import {
   TouchableOpacity,
   ImageStyle
 } from "react-native";
+import * as firebase from "firebase";
 import { NavigationScreenProps } from "react-navigation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import users from "mocks/users.json";
 import { colors } from "theme";
 import { User } from "models/User";
 import { ProfileImage, ScaleBar } from "components";
@@ -30,7 +30,25 @@ class ChatCreate extends React.Component<
     // typescript infers elements of empty array as never
     // so we have to manually cast type[]
     selected: [] as User[],
-    keyword: ""
+    keyword: "",
+    users: []
+  };
+
+  componentDidMount = async () => {
+    const users = (await firebase
+      .database()
+      .ref("users")
+      .limitToFirst(50)
+      .once("value")).val();
+
+    const currentUser = firebase.auth().currentUser;
+
+    delete users[currentUser.uid];
+
+    this.setState(prev => ({
+      ...prev,
+      users: Object.values(users)
+    }));
   };
 
   handleSelectRow = (user: User) => {
@@ -51,6 +69,7 @@ class ChatCreate extends React.Component<
     // pass selected user to header: ok button
     navigation.setParams({ selected: newUsers });
   };
+
   handleRenderRow = ({ item }: { item: User }) => {
     const styles = StyleSheet.create({
       container: {
@@ -138,9 +157,10 @@ class ChatCreate extends React.Component<
                 barColor={colors.primary}
               />
             </View>
-            <Text style={styles.description}>위치 정보 없음</Text>
           </View>
-          <Text style={styles.description}>15 시간 전</Text>
+          {/* <Text style={styles.description}>
+            {format(item.lastActiveTime, "en_US")}
+          </Text> */}
         </View>
       </TouchableOpacity>
     );
@@ -205,14 +225,14 @@ class ChatCreate extends React.Component<
       }
     });
 
-    const { keyword } = this.state;
+    const { keyword, users } = this.state;
 
     return (
       <View style={styles.container}>
         <View style={styles.selectedPeopleContainer}>
-          {this.state.selected.map((user: User) => (
+          {this.state.selected.map((user: User, index: number) => (
             <ProfileImage
-              key={user.id}
+              key={`${user.name}-${index}`}
               uri={user.profileImage}
               size={60}
               country={user.country}
@@ -247,13 +267,10 @@ class ChatCreate extends React.Component<
           placeholder="사용자이름/언어 (예: kr)"
           style={styles.input}
         />
-        {/* TODO: fix manually filtered self */}
         <FlatList<User>
-          data={this.filterByKeyword(
-            users.filter(item => item.id !== "101669882281461678010")
-          )}
+          data={this.filterByKeyword(users)}
           renderItem={this.handleRenderRow}
-          keyExtractor={item => item.id}
+          keyExtractor={(user, index) => `${user.name}-${index}`}
         />
       </View>
     );

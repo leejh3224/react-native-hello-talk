@@ -43,6 +43,10 @@ const ProfileBox: React.SFC<Props> = ({ me }) => {
     }
   });
 
+  if (!me) {
+    return null;
+  }
+
   const {
     profileImage,
     country,

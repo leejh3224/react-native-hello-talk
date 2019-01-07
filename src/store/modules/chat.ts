@@ -112,27 +112,31 @@ export const reducer = (state: any = initialState, action: ChatActions) => {
       };
     }
     case getType(updateChat):
-      return Object.values(action.payload);
+      return {
+        ...state,
+        chats: action.payload ? action.payload : {}
+      };
     default:
       return state;
   }
 };
 
 export const createMessage = data => {
-  //   const { chatId, sender, message, timestamp } = data;
+  const { chatId, sender, message, timestamp, section } = data;
 
-  //   const chatRef = firebase.database().ref(`/chats/${chatId}`);
-  //   const messageRef = firebase.database().ref("/messages");
+  const chatRef = firebase.database().ref(`chats/${chatId}`);
+  const messageRef = firebase.database().ref(`messages/${chatId}`);
 
-  //   chatRef.update({
-  //     lastMessage: message,
-  //     timestamp
-  //   });
-  //   messageRef.push({
-  //     sender,
-  //     message,
-  //     timestamp
-  //   });
+  chatRef.update({
+    lastMessage: message,
+    timestamp
+  });
+  messageRef.push({
+    sender,
+    message,
+    timestamp,
+    section
+  });
 
   return data;
 };
@@ -150,14 +154,14 @@ export function* createChatSaga({
   payload
 }: ActionType<typeof createChat.request>) {
   try {
-    // TODO: set owner as currentUser's id
     const newChat = {
       chatId: payload.chatId,
       title: payload.title,
-      members: payload.selected.map(user => user.id)
+      members: payload.selected.map(user => user.id),
+      image: payload.image
     };
 
-    // yield call(api.createChat, newChat);
+    yield call(api.createChat, newChat);
 
     yield put(createChat.success(newChat));
   } catch (error) {
@@ -178,6 +182,6 @@ export function* updateChatSaga() {
 
 export function* saga() {
   yield takeLatest(getType(createChat.request) as any, createChatSaga);
-  // yield fork(updateChatSaga);
+  yield fork(updateChatSaga);
   yield takeEvery(getType(sendMessage.request) as any, sendMessageSaga);
 }

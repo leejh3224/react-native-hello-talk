@@ -772,6 +772,13 @@
   dependencies:
     "@types/lodash" "*"
 
+"@types/lodash.groupby@^4.6.4":
+  version "4.6.4"
+  resolved "https://registry.yarnpkg.com/@types/lodash.groupby/-/lodash.groupby-4.6.4.tgz#4dbb730b0a8ad46915b7406d1e247cfd7a79b288"
+  integrity sha512-WvjZ0XtKdNUNGwY0udB3DiP3PC4mW6L3ESkJudA+LsgB2+LCUXUu3Pa+idzenLqBbMOcbBeAWPmEWSvyH0VWjw==
+  dependencies:
+    "@types/lodash" "*"
+
 "@types/lodash.isequal@^4.5.3":
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/@types/lodash.isequal/-/lodash.isequal-4.5.3.tgz#b0d2747d3e76cc94da47ebd932c69a98c0ba61b4"
@@ -4535,6 +4542,11 @@ lodash.get@^4.4.2:
   resolved "https://registry.yarnpkg.com/lodash.get/-/lodash.get-4.4.2.tgz#2d177f652fa31e939b4438d5341499dfa3825e99"
   integrity sha1-LRd/ZS+jHpObRDjVNBSZ36OCXpk=
 
+lodash.groupby@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.groupby/-/lodash.groupby-4.6.0.tgz#0b08a1dcf68397c397855c3239783832df7403d1"
+  integrity sha1-Cwih3PaDl8OXhVwyOXg4Mt90A9E=
+
 lodash.isarguments@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/lodash.isarguments/-/lodash.isarguments-3.1.0.tgz#2f573d85c6a24289ff00663b491c1d338ff3458a"
@@ -6997,6 +7009,11 @@ through@^2.3.6:
 time-stamp@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/time-stamp/-/time-stamp-1.1.0.tgz#764a5a11af50561921b133f3b44e618687e0f5c3"
+
+timeago.js@^4.0.0-beta.2:
+  version "4.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/timeago.js/-/timeago.js-4.0.0-beta.2.tgz#4e50a7250626b67e168a934d5e15052119366db1"
+  integrity sha512-MQkHiYGoB6qZC4DNWsLc9bav+L9hpdulL6sL7okzKR8r1Ipask/tXKAio8T+4jeby8FbpbDvbnCKGrh1bLop3g==
 
 tiny-queue@^0.2.1:
   version "0.2.1"

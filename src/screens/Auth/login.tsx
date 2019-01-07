@@ -31,16 +31,13 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
       if (user) {
         const { navigation } = this.props;
         // 3rd party authenticated user should go through additional register process
-        const firebaseUser = await firebase
+        const firebaseUser = (await firebase
           .database()
           .ref(`users/${user.uid}`)
-          .once("value");
+          .once("value")).val();
 
         if (firebaseUser.exists()) {
-          this.props.updateCurrentUser({
-            ...firebaseUser.val(),
-            lastActiveTime: Date.now()
-          });
+          this.props.updateCurrentUser({ ...firebaseUser, online: true });
           navigation.navigate(getNavigationKey(["chat", "home"]));
         } else {
           navigation.navigate(getNavigationKey(["auth", "register"]), {

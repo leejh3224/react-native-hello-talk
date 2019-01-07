@@ -31,20 +31,25 @@ const HeaderLeft: React.SFC<HeaderLeftProps> = ({ navigation, chats }) => {
     }
   });
 
-  const chatId = navigation.getParam("chatId", "default-chatId");
-  const { title, timestamp } = chats[chatId];
+  const chatId = navigation.getParam("chatId");
 
-  return (
-    <View style={styles.container}>
-      <BackButton path={["chat", "home"]} showTabBar />
-      <View>
-        <Text style={styles.title}>{title}</Text>
-        {timestamp && (
-          <Text style={styles.subtitle}>{getHoursAndMinutes(timestamp)}</Text>
-        )}
+  if (chats[chatId]) {
+    const { title, timestamp } = chats[chatId];
+
+    return (
+      <View style={styles.container}>
+        <BackButton path={["chat", "home"]} showTabBar />
+        <View>
+          <Text style={styles.title}>{title}</Text>
+          {timestamp && (
+            <Text style={styles.subtitle}>{getHoursAndMinutes(timestamp)}</Text>
+          )}
+        </View>
       </View>
-    </View>
-  );
+    );
+  }
+
+  return null;
 };
 
 const mapStateToProps = (state: AppState) => ({

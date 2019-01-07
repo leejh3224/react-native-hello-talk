@@ -2,7 +2,7 @@ import * as React from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 import { ProfileImage, ScaleBar } from "components";
-import users from "mocks/users.json";
+// import users from "mocks/users.json";
 import { User } from "models/User";
 import { languages } from "lib";
 import { colors } from "theme";
@@ -81,7 +81,7 @@ class ChatFriendsList extends React.Component<NavigationScreenProps> {
   render() {
     const { navigation } = this.props;
     const filters = navigation.getParam("filters", {});
-    const filteredUsers: User[] = users.filter(user => {
+    const filteredUsers: User[] = [].filter(user => {
       const matchesAge =
         filters.ageMin <= user.age && filters.ageMax >= user.age;
       const matchesLanguage =
