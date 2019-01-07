@@ -1,13 +1,31 @@
 import * as React from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
+import * as firebase from "firebase";
 import { ProfileImage, ScaleBar } from "components";
-// import users from "mocks/users.json";
 import { User } from "models/User";
 import { languages } from "lib";
 import { colors } from "theme";
 
 class ChatFriendsList extends React.Component<NavigationScreenProps> {
+  state = {
+    users: []
+  };
+
+  componentDidMount = async () => {
+    const userRef = firebase
+      .database()
+      .ref("users")
+      .limitToFirst(50);
+
+    const users = (await userRef.once("value")).val();
+
+    this.setState(prev => ({
+      ...prev,
+      users: Object.values(users)
+    }));
+  };
+
   handleRenderRow = ({ item }: { item: User }) => {
     const styles = StyleSheet.create({
       container: {
@@ -70,9 +88,7 @@ class ChatFriendsList extends React.Component<NavigationScreenProps> {
                 barColor={colors.primary}
               />
             </View>
-            <Text style={styles.description}>위치 정보 없음</Text>
           </View>
-          <Text style={styles.description}>15 시간 전</Text>
         </View>
       </View>
     );
@@ -80,8 +96,10 @@ class ChatFriendsList extends React.Component<NavigationScreenProps> {
 
   render() {
     const { navigation } = this.props;
+    const { users } = this.state;
+
     const filters = navigation.getParam("filters", {});
-    const filteredUsers: User[] = [].filter(user => {
+    const filteredUsers = (users as User[]).filter(user => {
       const matchesAge =
         filters.ageMin <= user.age && filters.ageMax >= user.age;
       const matchesLanguage =
@@ -99,13 +117,29 @@ class ChatFriendsList extends React.Component<NavigationScreenProps> {
     });
 
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <FlatList<User>
           data={filteredUsers}
           renderItem={this.handleRenderRow}
-          keyExtractor={item => item.id}
+          keyExtractor={(item, index) => `${item.name}-${index}`}
           ListEmptyComponent={() => {
-            return <Text>검색 결과가 없습니다.</Text>;
+            return (
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  alignSelf: "center",
+                  flex: 1
+                }}
+              >
+                <Text style={{ color: colors.gray, fontSize: 18 }}>
+                  검색 결과가 없습니다.
+                </Text>
+              </View>
+            );
+          }}
+          contentContainerStyle={{
+            flexGrow: 1
           }}
         />
       </View>

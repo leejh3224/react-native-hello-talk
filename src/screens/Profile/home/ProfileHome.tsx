@@ -11,10 +11,39 @@ import { connect } from "react-redux";
 import { colors } from "theme";
 import { getNavigationKey } from "lib";
 import { NavigationScreenProps } from "react-navigation";
-import { AppState } from "store/modules";
 import { setBottomTabBarVisibility } from "store/modules/ui";
 
 class ProfileHome extends React.Component<NavigationScreenProps> {
+  state = {
+    user: null
+  };
+
+  componentDidMount = async () => {
+    const user = firebase.auth().currentUser;
+
+    if (user) {
+      const userRef = firebase.database().ref(`users/${user.uid}`);
+
+      userRef.on("value", snap => {
+        if (snap.exists()) {
+          this.setState(prev => ({
+            ...prev,
+            user: snap.val()
+          }));
+        }
+      });
+    }
+  };
+
+  componentWillUnmount = () => {
+    const user = firebase.auth().currentUser;
+
+    if (user) {
+      const userRef = firebase.database().ref(`users/${user.uid}`);
+      userRef.off("value");
+    }
+  };
+
   logout = async () => {
     try {
       const { navigation } = this.props;
@@ -55,9 +84,10 @@ class ProfileHome extends React.Component<NavigationScreenProps> {
       }
     });
 
-    const { navigation, me } = this.props;
+    const { navigation } = this.props;
+    const { user } = this.state;
 
-    if (!me) {
+    if (!user) {
       return null;
     }
 
@@ -82,7 +112,7 @@ class ProfileHome extends React.Component<NavigationScreenProps> {
           }}
         >
           <Text style={styles.title as TextStyle}>자기 소개</Text>
-          <Text style={styles.description}>{me.description}</Text>
+          <Text style={styles.description}>{user.description}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.container, { alignItems: "center" }]}
@@ -95,11 +125,7 @@ class ProfileHome extends React.Component<NavigationScreenProps> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  me: state.auth.me
-});
-
 export default connect(
-  mapStateToProps,
+  null,
   { setBottomTabBarVisibility }
 )(ProfileHome);

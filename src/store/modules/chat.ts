@@ -122,21 +122,31 @@ export const reducer = (state: any = initialState, action: ChatActions) => {
 };
 
 export const createMessage = data => {
-  const { chatId, sender, message, timestamp, section } = data;
+  const { chatId, sender, message, timestamp, section, media } = data;
 
   const chatRef = firebase.database().ref(`chats/${chatId}`);
   const messageRef = firebase.database().ref(`messages/${chatId}`);
 
   chatRef.update({
-    lastMessage: message,
+    lastMessage: message ? message : `${media.type}을 보냈습니다.`,
     timestamp
   });
-  messageRef.push({
+
+  const newMessage = {
     sender,
-    message,
     timestamp,
     section
-  });
+  };
+
+  if (message) {
+    newMessage.message = message;
+  }
+
+  if (media) {
+    newMessage.media = media;
+  }
+
+  messageRef.push(newMessage);
 
   return data;
 };
@@ -146,6 +156,7 @@ export function* sendMessageSaga({ payload }: { payload: SendMessagePayload }) {
     const message = yield call(createMessage, payload);
     yield put(sendMessage.success(message));
   } catch (error) {
+    console.log(error);
     yield put(sendMessage.failure(error));
   }
 }

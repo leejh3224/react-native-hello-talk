@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Image } from "react-native";
 import { colors } from "theme";
 import { ProfileImage } from "components";
 import { getHoursAndMinutes } from "lib";
@@ -34,13 +34,14 @@ interface Props {
   source: {
     uri: string;
   };
-  message: string;
+  message?: string;
   timestamp: number;
+  media?: object;
 }
 
 class ChatBubble extends React.PureComponent<Props> {
   render() {
-    const { source, message, timestamp } = this.props;
+    const { source, message, timestamp, media } = this.props;
     return (
       <View style={styles.container}>
         <ProfileImage
@@ -51,9 +52,19 @@ class ChatBubble extends React.PureComponent<Props> {
             alignSelf: "flex-start"
           }}
         />
-        <View style={styles.messageContainer}>
-          <Text style={styles.message}>{message}</Text>
-        </View>
+        {message ? (
+          <View style={styles.messageContainer}>
+            <Text style={styles.message}>{message}</Text>
+          </View>
+        ) : (
+          <Image
+            source={{ uri: media && media.uri }}
+            style={{
+              width: media && media.width / 4,
+              height: media && media.height / 4
+            }}
+          />
+        )}
         <Text style={styles.timestamp}>{getHoursAndMinutes(timestamp)}</Text>
       </View>
     );

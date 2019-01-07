@@ -11,10 +11,8 @@ import {
 } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
 import Toast from "react-native-easy-toast";
-import { connect } from "react-redux";
 import * as firebase from "firebase";
 import { getNavigationKey } from "lib";
-import { updateCurrentUser } from "store/modules/auth";
 import { colors } from "theme";
 import api from "api";
 import helloTalkImage from "../../../assets/images/hello-talk.png";
@@ -37,7 +35,6 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
           .once("value")).val();
 
         if (firebaseUser.exists()) {
-          this.props.updateCurrentUser({ ...firebaseUser, online: true });
           navigation.navigate(getNavigationKey(["chat", "home"]));
         } else {
           navigation.navigate(getNavigationKey(["auth", "register"]), {
@@ -153,16 +150,9 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
   }
 }
 
-const ConnectedAuthLogin = connect(
-  null,
-  { updateCurrentUser }
-)(AuthLogin);
-
 export const AuthLoginScreen = {
-  screen: ConnectedAuthLogin,
+  screen: AuthLogin,
   navigationOptions: {
     header: null
   }
 };
-
-export default ConnectedAuthLogin;

@@ -4,12 +4,13 @@
 	"private": true,
 	"scripts": {
 		"start": "expo start",
-		"android": "REACT_DEBUGGER=\"rndebugger-open --open --port 19001\" expo start --android",
+		"android": "REACT_DEBUGGER=\"rndebugger-open --open --port 19001\" expo start --android --localhost",
 		"ios": "REACT_DEBUGGER=\"rndebugger-open --open --port 19001\" expo start --ios --localhost",
 		"eject": "expo eject",
 		"test": "jest --watch --maxWorkers 4",
 		"report": "jest --coverage",
-		"open:avd": "emulator @Nexus_5X_API_24"
+		"open:avd": "emulator @Nexus_5X_API_24",
+		"open:debugger": "rndebugger-open --open --port 19001"
 	},
 	"dependencies": {
 		"expo": "^31.0.2",

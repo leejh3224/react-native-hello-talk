@@ -8,9 +8,7 @@ import {
   Platform,
   Dimensions,
   TouchableOpacity,
-  SectionList,
-  Keyboard,
-  EmitterSubscription
+  SectionList
 } from "react-native";
 import * as firebase from "firebase";
 import { NavigationScreenProps } from "react-navigation";
@@ -43,25 +41,13 @@ class ChatRoom extends React.Component<Props, State> {
     chatId: "",
     text: "",
     uploadMenuBarVisible: false,
-    keyboardVisible: false,
     user: null,
     messages: {}
   };
 
   private sectionList!: SectionList<IMessage>;
-  private keyboardDidShowListener!: EmitterSubscription;
-  private keyboardDidHideListener!: EmitterSubscription;
 
   componentDidMount = async () => {
-    this.keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      this.keyboardDidShow
-    );
-    this.keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      this.keyboardDidHide
-    );
-
     const { navigation } = this.props;
     const user = firebase.auth().currentUser;
     const firebaseUser = (await firebase
@@ -101,9 +87,6 @@ class ChatRoom extends React.Component<Props, State> {
   };
 
   componentWillUnmount() {
-    this.keyboardDidShowListener.remove();
-    this.keyboardDidHideListener.remove();
-
     const { navigation } = this.props;
     const chatId = navigation.getParam("chatId");
     const messagesRef = firebase.database().ref(`messages/${chatId}`);
@@ -112,34 +95,9 @@ class ChatRoom extends React.Component<Props, State> {
 
   // TODO: add animation for hiding uploadMenuBar
   toggleUploadMenuBar = () => {
-    // hide Keyboard when user try to open upload menubar
-    const willOpenUploadMenuBar = !this.state.uploadMenuBarVisible;
-
-    if (willOpenUploadMenuBar) {
-      Keyboard.dismiss();
-    }
-
     this.setState(prev => ({
       ...prev,
       uploadMenuBarVisible: !prev.uploadMenuBarVisible
-    }));
-  };
-
-  keyboardDidShow = () => {
-    if (this.state.uploadMenuBarVisible) {
-      this.toggleUploadMenuBar();
-    }
-
-    this.setState(prev => ({
-      ...prev,
-      keyboardVisible: true
-    }));
-  };
-
-  keyboardDidHide = () => {
-    this.setState(prev => ({
-      ...prev,
-      keyboardVisible: false
     }));
   };
 
@@ -152,31 +110,6 @@ class ChatRoom extends React.Component<Props, State> {
     return true;
   };
 
-  askCameraPermission = async () => {
-    // Requires Permissions.CAMERA_ROLL and Permissions.CAMERA on iOS only.
-    if (Platform.OS === "ios") {
-      const [cameraRoll, camera] = await Promise.all([
-        Permissions.askAsync(Permissions.CAMERA_ROLL),
-        Permissions.askAsync(Permissions.CAMERA)
-      ]);
-
-      return cameraRoll.status === "granted" && camera.status === "granted";
-    }
-    return true;
-  };
-
-  openCamera = async () => {
-    const permission = await this.askCameraPermission();
-
-    const result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true
-    });
-
-    if (permission && !result.cancelled) {
-      console.log(result);
-    }
-  };
-
   pickImage = async () => {
     const permission = await this.askCameraRollPermission();
 
@@ -185,7 +118,23 @@ class ChatRoom extends React.Component<Props, State> {
     });
 
     if (permission && !result.cancelled) {
-      console.log(result);
+      const { sendMessageRequest, navigation } = this.props;
+      const { user } = this.state;
+
+      const chatId = navigation.getParam("chatId", uuid());
+      const now = Date.now() * -1;
+
+      delete result.cancelled;
+
+      sendMessageRequest({
+        chatId,
+        sender: user.name,
+        timestamp: now,
+        section: getYearMonthAndDay(now),
+        media: result
+      });
+
+      this.toggleUploadMenuBar();
     }
   };
 
@@ -235,6 +184,7 @@ class ChatRoom extends React.Component<Props, State> {
         }}
         message={item.message}
         timestamp={item.timestamp * -1}
+        media={item.media}
       />
     );
   };
@@ -245,7 +195,6 @@ class ChatRoom extends React.Component<Props, State> {
     const isIPhoneX =
       Platform.OS === "ios" &&
       (dimension.height > 800 || dimension.width > 800);
-    const { keyboardVisible } = this.state;
 
     const styles = StyleSheet.create({
       container: {
@@ -268,11 +217,7 @@ class ChatRoom extends React.Component<Props, State> {
         padding: 8,
         backgroundColor: colors.white,
         paddingBottom: isIPhoneX ? 36 : 8,
-        flexDirection: "row",
-        // textInput inside View not responding correctly in android
-        // https://github.com/facebook/react-native/issues/16826
-        flex: Platform.OS === "android" && keyboardVisible ? 1 : 0,
-        alignItems: "flex-start"
+        flexDirection: "row"
       },
       textInput: {
         borderRadius: 20,
@@ -318,10 +263,17 @@ class ChatRoom extends React.Component<Props, State> {
       })
     );
 
-    console.log(sectionedMessages);
-
+    /**
+     * https://github.com/facebook/react-native/issues/13497
+     * Android: Elements in KeyboardAvoidingView still covered by keyboard
+     * use `KeyboardAvoidingView`.`keyboardVerticalOffset`
+     */
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={styles.container}
+        keyboardVerticalOffset={Platform.OS === "android" ? 96 : 0}
+      >
         <SectionList
           inverted
           ref={ref => ((this.sectionList as any) = ref)}
@@ -337,39 +289,47 @@ class ChatRoom extends React.Component<Props, State> {
           }}
           renderItem={this.handleRenderRow}
           keyExtractor={item => Number(item.timestamp).toString()}
+          ListHeaderComponent={() => {
+            return (
+              <View style={styles.textInputContainer}>
+                <TouchableOpacity
+                  style={styles.uploadMenuIconButton}
+                  onPress={this.toggleUploadMenuBar}
+                >
+                  <MaterialCommunityIcons
+                    name="plus-circle-outline"
+                    size={32}
+                    color={
+                      this.state.uploadMenuBarVisible
+                        ? colors.primary
+                        : colors.gray
+                    }
+                  />
+                </TouchableOpacity>
+                <TextInput
+                  placeholder="메세지를 입력하세요."
+                  style={styles.textInput}
+                  onChangeText={this.handleChangeText}
+                  value={this.state.text}
+                  onSubmitEditing={this.handleSendMessage}
+                  enablesReturnKeyAutomatically
+                />
+                <TouchableOpacity
+                  disabled={this.state.text.length <= 0}
+                  onPress={this.handleSendMessage}
+                >
+                  <MaterialCommunityIcons
+                    name="send"
+                    size={32}
+                    color={
+                      this.state.text.length <= 0 ? colors.gray : colors.primary
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
+            );
+          }}
         />
-        <View style={styles.textInputContainer}>
-          <TouchableOpacity
-            style={styles.uploadMenuIconButton}
-            onPress={this.toggleUploadMenuBar}
-          >
-            <MaterialCommunityIcons
-              name="plus-circle-outline"
-              size={32}
-              color={
-                this.state.uploadMenuBarVisible ? colors.primary : colors.gray
-              }
-            />
-          </TouchableOpacity>
-          <TextInput
-            placeholder="메세지를 입력하세요."
-            style={styles.textInput}
-            onChangeText={this.handleChangeText}
-            value={this.state.text}
-            onSubmitEditing={this.handleSendMessage}
-            enablesReturnKeyAutomatically
-          />
-          <TouchableOpacity
-            disabled={this.state.text.length <= 0}
-            onPress={this.handleSendMessage}
-          >
-            <MaterialCommunityIcons
-              name="send"
-              size={32}
-              color={this.state.text.length <= 0 ? colors.gray : colors.primary}
-            />
-          </TouchableOpacity>
-        </View>
         {this.state.uploadMenuBarVisible && (
           <View style={styles.uploadMenuBarContainer}>
             <View style={styles.menuContainer}>
@@ -384,29 +344,6 @@ class ChatRoom extends React.Component<Props, State> {
                 />
               </TouchableOpacity>
               <Text>이미지</Text>
-            </View>
-            <View style={styles.menuContainer}>
-              <TouchableOpacity
-                style={styles.menuIconContainer}
-                onPress={this.openCamera}
-              >
-                <MaterialCommunityIcons
-                  name="camera"
-                  size={32}
-                  color={colors.gray}
-                />
-              </TouchableOpacity>
-              <Text>카메라</Text>
-            </View>
-            <View style={styles.menuContainer}>
-              <TouchableOpacity style={styles.menuIconContainer}>
-                <MaterialCommunityIcons
-                  name="video"
-                  size={32}
-                  color={colors.gray}
-                />
-              </TouchableOpacity>
-              <Text>비디오</Text>
             </View>
           </View>
         )}

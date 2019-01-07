@@ -9,6 +9,7 @@ export const googleOAuth = async () => {
    */
   const { idToken, accessToken }: any = await Google.logInAsync({
     iosClientId: Constants.manifest.extra!.googleOAuth.iOSClientId,
+    androidClientId: Constants.manifest.extra!.googleOAuth.androidClientId,
     scopes: ["profile", "email"],
     behavior: "web"
   });

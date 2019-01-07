@@ -1,24 +1,42 @@
 import * as React from "react";
 import { View, TextInput, Text, StyleSheet } from "react-native";
-import { connect } from "react-redux";
-import { colors } from "theme";
-import { AppState } from "store/modules";
+import * as firebase from "firebase";
 import { NavigationScreenProps } from "react-navigation";
+import { colors } from "theme";
 
 class EditDescription extends React.Component<NavigationScreenProps> {
   constructor(props) {
     super(props);
-    const { me, navigation } = props;
-
-    navigation.setParams({
-      originalDescription: me.description,
-      editedDescription: me.description
-    });
 
     this.state = {
-      text: me.description
+      text: "",
+      user: null
     };
   }
+
+  componentDidMount = async () => {
+    const user = firebase.auth().currentUser;
+
+    if (user) {
+      const firebaseUser = (await firebase
+        .database()
+        .ref(`users/${user.uid}`)
+        .once("value")).val();
+
+      const { navigation } = this.props;
+
+      navigation.setParams({
+        originalDescription: firebaseUser.description,
+        editedDescription: firebaseUser.description
+      });
+
+      this.setState(prev => ({
+        ...prev,
+        user: firebaseUser,
+        text: firebaseUser.description
+      }));
+    }
+  };
 
   handleReset = () => {
     this.setState(prev => ({
@@ -82,11 +100,4 @@ class EditDescription extends React.Component<NavigationScreenProps> {
   }
 }
 
-const mapStateToProps = (state: AppState) => ({
-  me: state.auth.me
-});
-
-export default connect(
-  mapStateToProps,
-  null
-)(EditDescription);
+export default EditDescription;

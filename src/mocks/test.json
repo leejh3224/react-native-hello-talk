@@ -19,7 +19,7 @@
 				"message": "Hi",
 				"timestamp": 1459361875337,
 				"media": {
-					"type": "image/jpeg",
+					"type": "image",
 					"uri": "dfdfdfdfd",
 					"width": 870,
 					"height": 550

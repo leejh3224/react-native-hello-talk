@@ -71,7 +71,7 @@ Constants.extra.projectId === 'rn-hello-talk' // use extra field like this!
 
   - [x] list chats belonging to the user
 
-  - [x] send pictures/videos
+  - [x] send pictures
 
   - [x] find people to talk to
 
@@ -87,6 +87,6 @@ Constants.extra.projectId === 'rn-hello-talk' // use extra field like this!
 
   - [x] splash screen
 
-  - [ ] push messages ([FCM:firebase cloud messaging](https://firebase.google.com/docs/cloud-messaging/))
+  - [ ] push notification
 
   - [ ] test coverage >= 60%

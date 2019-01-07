@@ -1,5 +1,12 @@
 import * as React from "react";
-import { View, Text, StyleSheet, TextStyle } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextStyle,
+  Dimensions,
+  Platform
+} from "react-native";
 import { colors } from "theme";
 import ProfileHome from "./ProfileHome";
 import ProfileBox from "./ProfileBox";
@@ -31,11 +38,7 @@ const ProfileHomeScreen = {
         },
         shadowOpacity: 0.27,
         shadowRadius: 4.65,
-        elevation: 6,
-        position: "absolute",
-        top: 56,
-        alignSelf: "center",
-        justifyContent: "center"
+        elevation: 6
       }
     });
 
@@ -51,8 +54,20 @@ const ProfileHomeScreen = {
       headerLeft: <Text style={styles.navBarTitle as TextStyle}>프로필</Text>,
       // Profile
       headerTitle: (
-        <View style={styles.profileContainer}>
-          <ProfileBox />
+        <View
+          style={{
+            position: "absolute",
+            top: 56,
+            left: 0,
+            right: 0,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingRight: Platform.OS === "android" ? 48 : 0
+          }}
+        >
+          <View style={styles.profileContainer}>
+            <ProfileBox />
+          </View>
         </View>
       )
     };
