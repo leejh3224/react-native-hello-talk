@@ -56,7 +56,7 @@ export const reducer = (state: any = initialState, action: ChatActions) => {
     case getType(sendMessage.success): {
       const {
         chatId,
-        sender,
+        senderProfile,
         message,
         timestamp
       } = action.payload as SendMessagePayload;
@@ -75,7 +75,7 @@ export const reducer = (state: any = initialState, action: ChatActions) => {
           ...state.messages,
           [chatId]: {
             [uuid()]: {
-              sender,
+              senderProfile,
               message,
               timestamp
             },
@@ -122,7 +122,15 @@ export const reducer = (state: any = initialState, action: ChatActions) => {
 };
 
 export const createMessage = data => {
-  const { chatId, sender, message, timestamp, section, media } = data;
+  const {
+    chatId,
+    senderProfile,
+    sender,
+    message,
+    timestamp,
+    section,
+    media
+  } = data;
 
   const chatRef = firebase.database().ref(`chats/${chatId}`);
   const messageRef = firebase.database().ref(`messages/${chatId}`);
@@ -133,6 +141,7 @@ export const createMessage = data => {
   });
 
   const newMessage = {
+    senderProfile,
     sender,
     timestamp,
     section

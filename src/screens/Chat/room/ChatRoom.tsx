@@ -129,6 +129,7 @@ class ChatRoom extends React.Component<Props, State> {
       sendMessageRequest({
         chatId,
         sender: user.name,
+        senderProfile: user.profileImage,
         timestamp: now,
         section: getYearMonthAndDay(now),
         media: result
@@ -162,6 +163,7 @@ class ChatRoom extends React.Component<Props, State> {
       chatId,
       message: text,
       sender: user.name,
+      senderProfile: user.profileImage,
       timestamp: now,
       section: getYearMonthAndDay(now)
     });
@@ -180,7 +182,7 @@ class ChatRoom extends React.Component<Props, State> {
     return (
       <ChatBubble
         source={{
-          uri: user.profileImage
+          uri: item.senderProfile
         }}
         message={item.message}
         timestamp={item.timestamp * -1}
@@ -189,7 +191,7 @@ class ChatRoom extends React.Component<Props, State> {
     );
   };
 
-  render() {
+  handlerRenderListHeader = () => {
     // iPhoneX support
     const dimension = Dimensions.get("window");
     const isIPhoneX =
@@ -197,22 +199,6 @@ class ChatRoom extends React.Component<Props, State> {
       (dimension.height > 800 || dimension.width > 800);
 
     const styles = StyleSheet.create({
-      container: {
-        flex: 1
-      },
-      timestampContainer: {
-        borderRadius: 20,
-        backgroundColor: colors.gray,
-        marginTop: 8,
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        alignSelf: "flex-start"
-      },
-      timestamp: {
-        color: colors.white,
-        fontSize: 16,
-        textAlign: "center"
-      },
       textInputContainer: {
         padding: 8,
         backgroundColor: colors.white,
@@ -232,6 +218,62 @@ class ChatRoom extends React.Component<Props, State> {
       uploadMenuIconButton: {
         alignSelf: "flex-start",
         marginRight: 8
+      }
+    });
+
+    return (
+      <View style={styles.textInputContainer}>
+        <TouchableOpacity
+          style={styles.uploadMenuIconButton}
+          onPress={this.toggleUploadMenuBar}
+        >
+          <MaterialCommunityIcons
+            name="plus-circle-outline"
+            size={32}
+            color={
+              this.state.uploadMenuBarVisible ? colors.primary : colors.gray
+            }
+          />
+        </TouchableOpacity>
+        <TextInput
+          placeholder="메세지를 입력하세요."
+          style={styles.textInput}
+          onChangeText={this.handleChangeText}
+          value={this.state.text}
+          onSubmitEditing={this.handleSendMessage}
+          enablesReturnKeyAutomatically
+        />
+        <TouchableOpacity
+          disabled={this.state.text.length <= 0}
+          onPress={this.handleSendMessage}
+        >
+          <MaterialCommunityIcons
+            name="send"
+            size={32}
+            color={this.state.text.length <= 0 ? colors.gray : colors.primary}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  render() {
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1
+      },
+      timestampContainer: {
+        borderRadius: 20,
+        backgroundColor: colors.gray,
+        marginTop: 8,
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        alignSelf: "flex-start"
+      },
+      timestamp: {
+        color: colors.white,
+        fontSize: 16,
+        textAlign: "center"
       },
       uploadMenuBarContainer: {
         borderTopColor: colors.gray,
@@ -289,46 +331,7 @@ class ChatRoom extends React.Component<Props, State> {
           }}
           renderItem={this.handleRenderRow}
           keyExtractor={item => Number(item.timestamp).toString()}
-          ListHeaderComponent={() => {
-            return (
-              <View style={styles.textInputContainer}>
-                <TouchableOpacity
-                  style={styles.uploadMenuIconButton}
-                  onPress={this.toggleUploadMenuBar}
-                >
-                  <MaterialCommunityIcons
-                    name="plus-circle-outline"
-                    size={32}
-                    color={
-                      this.state.uploadMenuBarVisible
-                        ? colors.primary
-                        : colors.gray
-                    }
-                  />
-                </TouchableOpacity>
-                <TextInput
-                  placeholder="메세지를 입력하세요."
-                  style={styles.textInput}
-                  onChangeText={this.handleChangeText}
-                  value={this.state.text}
-                  onSubmitEditing={this.handleSendMessage}
-                  enablesReturnKeyAutomatically
-                />
-                <TouchableOpacity
-                  disabled={this.state.text.length <= 0}
-                  onPress={this.handleSendMessage}
-                >
-                  <MaterialCommunityIcons
-                    name="send"
-                    size={32}
-                    color={
-                      this.state.text.length <= 0 ? colors.gray : colors.primary
-                    }
-                  />
-                </TouchableOpacity>
-              </View>
-            );
-          }}
+          ListHeaderComponent={this.handlerRenderListHeader}
         />
         {this.state.uploadMenuBarVisible && (
           <View style={styles.uploadMenuBarContainer}>
