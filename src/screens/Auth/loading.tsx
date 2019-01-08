@@ -12,14 +12,24 @@ class AuthLoading extends React.Component<NavigationScreenProps> {
   }
 
   bootstrap = () => {
-    firebase.auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(async user => {
       const { navigation } = this.props;
 
-      return navigation.navigate(
-        user
-          ? getNavigationKey(["chat", "home"])
-          : getNavigationKey(["auth", "login"])
-      );
+      if (!user) {
+        return navigation.navigate(getNavigationKey(["auth", "login"]));
+      }
+
+      const firebaseUser = await firebase
+        .database()
+        .ref(`users/${user.uid}`)
+        .once("value");
+
+      if (firebaseUser.exists()) {
+        return navigation.navigate(getNavigationKey(["chat", "home"]));
+      }
+      return navigation.navigate(getNavigationKey(["auth", "register"]), {
+        userData: user
+      });
     });
   };
 

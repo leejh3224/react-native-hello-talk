@@ -2,6 +2,8 @@
 
 Clone App for [Hello Talk](https://www.hellotalk.com).
 
+Want to see it in action? check out this [youtube video](https://www.youtube.com/watch?v=d-293RP7xzg).
+
 ## Getting Started
 
 This project is using [boilterplate](https://github.com/slorber/expo-typescript).

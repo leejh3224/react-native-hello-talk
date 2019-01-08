@@ -22,17 +22,21 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
     loginInProgress: false
   };
 
+  errorToast = null;
+
   signIn = async () => {
     try {
       const { user } = await this.requestOAuth();
 
+      console.log(user);
+
       if (user) {
         const { navigation } = this.props;
         // 3rd party authenticated user should go through additional register process
-        const firebaseUser = (await firebase
+        const firebaseUser = await firebase
           .database()
           .ref(`users/${user.uid}`)
-          .once("value")).val();
+          .once("value");
 
         if (firebaseUser.exists()) {
           navigation.navigate(getNavigationKey(["chat", "home"]));
@@ -42,15 +46,18 @@ class AuthLogin extends React.Component<NavigationScreenProps> {
           });
         }
       }
-    } catch (error) {
-      console.log(error);
 
       this.setState(prev => ({
         ...prev,
         loginInProgress: false
       }));
-
+    } catch (error) {
+      console.log(error);
       (this.refs.errorToast as any).show("로그인 실패");
+      this.setState(prev => ({
+        ...prev,
+        loginInProgress: false
+      }));
     }
   };
 

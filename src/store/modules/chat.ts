@@ -67,7 +67,7 @@ export const reducer = (state: any = initialState, action: ChatActions) => {
           ...state.chats,
           [chatId]: {
             ...state.chats[chatId],
-            lastMessage: message,
+            lastMessage: message ? message : "image를 보냈습니다.",
             timestamp
           }
         },
