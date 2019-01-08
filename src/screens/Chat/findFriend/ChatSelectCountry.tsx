@@ -63,7 +63,7 @@ class ChatSelectCountry extends React.Component<NavigationScreenProps, State> {
 
     const initialRows = Math.floor((windowHeight - Header.HEIGHT) / ROW_HEIGHT);
     const itemIndex = countries.findIndex(
-      country => country.name === selectedCountry
+      country => country.code === selectedCountry
     );
 
     return (
@@ -91,7 +91,7 @@ class ChatSelectCountry extends React.Component<NavigationScreenProps, State> {
             return (
               <TouchableOpacity
                 style={styles.listItemContainer}
-                onPress={() => this.handleSelect(item.name)}
+                onPress={() => this.handleSelect(item.code)}
               >
                 <View
                   style={{
@@ -107,7 +107,7 @@ class ChatSelectCountry extends React.Component<NavigationScreenProps, State> {
                     {item.name}
                   </Text>
                 </View>
-                {selectedCountry === item.name && (
+                {selectedCountry === item.code && (
                   <MaterialCommunityIcons
                     name="check"
                     size={28}

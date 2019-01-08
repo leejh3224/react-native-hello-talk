@@ -7,6 +7,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { NavigationScreenProps } from "react-navigation";
+import * as firebase from "firebase";
 import { connect } from "react-redux";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { getNavigationKey, getHoursAndMinutes } from "lib";
@@ -14,7 +15,7 @@ import { colors } from "theme";
 import { AppState } from "store/modules";
 import { setBottomTabBarVisibility } from "store/modules/ui";
 import { Chat } from "models/Chat";
-import { ProfileImage } from "components";
+import { ProfileImage, BaseModal } from "components";
 
 interface Props extends NavigationScreenProps {
   setBottomTabBarVisibility: typeof setBottomTabBarVisibility;
@@ -24,6 +25,51 @@ interface Props extends NavigationScreenProps {
 }
 
 class ChatHome extends React.Component<Props, {}> {
+  state = {
+    modalVisible: false,
+    selectedChatId: ""
+  };
+
+  deleteChat = () => {
+    const { selectedChatId: chatId } = this.state;
+
+    if (chatId) {
+      return Promise.all([
+        firebase
+          .database()
+          .ref(`chats/${chatId}`)
+          .remove(),
+        firebase
+          .database()
+          .ref(`members/${chatId}`)
+          .remove(),
+        firebase
+          .database()
+          .ref(`messages/${chatId}`)
+          .remove()
+      ]).then(() => this.toggleModal());
+    }
+
+    return;
+  };
+
+  toggleModal = () => {
+    this.setState(prev => ({
+      ...prev,
+      modalVisible: !prev.modalVisible
+    }));
+  };
+
+  onLongPressItem = (chatId: string) => {
+    this.setState(
+      prev => ({
+        ...prev,
+        selectedChatId: chatId
+      }),
+      this.toggleModal
+    );
+  };
+
   handleRenderRow = ({ item, index }: { item: Chat; index: number }) => {
     const styles = StyleSheet.create({
       container: {
@@ -57,17 +103,18 @@ class ChatHome extends React.Component<Props, {}> {
     });
 
     const { navigation, chats } = this.props;
+    const chatId = Object.keys(chats)[index];
 
-    // TODO: onLongPress -> delete / turn off notification
     return (
       <TouchableOpacity
         style={styles.container}
         onPress={() => {
           navigation.navigate(getNavigationKey(["chat", "room"]), {
-            chatId: Object.keys(chats)[index]
+            chatId
           });
           this.props.setBottomTabBarVisibility(false);
         }}
+        onLongPress={() => this.onLongPressItem(chatId)}
       >
         <ProfileImage
           uri={item.image}
@@ -91,6 +138,7 @@ class ChatHome extends React.Component<Props, {}> {
 
   render() {
     const { chats } = this.props;
+    const { modalVisible } = this.state;
 
     return (
       <View style={{ flex: 1 }}>
@@ -123,6 +171,53 @@ class ChatHome extends React.Component<Props, {}> {
             flexGrow: 1
           }}
         />
+
+        <BaseModal visible={modalVisible} onClose={this.toggleModal}>
+          <View>
+            <Text
+              style={{
+                fontSize: 20,
+                textAlign: "center",
+                marginVertical: 16
+              }}
+            >
+              대화를 삭제하시겠습니까?
+            </Text>
+            <View
+              style={{
+                alignSelf: "flex-end",
+                flexDirection: "row",
+                alignItems: "flex-end"
+              }}
+            >
+              <TouchableOpacity
+                style={{ marginRight: 16 }}
+                onPress={this.deleteChat}
+              >
+                <Text
+                  style={{
+                    fontSize: 22,
+                    color: colors.warning,
+                    fontWeight: "bold"
+                  }}
+                >
+                  OK
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.toggleModal}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: colors.black,
+                    fontWeight: "bold"
+                  }}
+                >
+                  취소
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </BaseModal>
       </View>
     );
   }
