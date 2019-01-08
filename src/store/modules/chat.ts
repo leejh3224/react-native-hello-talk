@@ -85,14 +85,15 @@ export const reducer = (state: any = initialState, action: ChatActions) => {
       };
     }
     case getType(createChat.success): {
-      const { chatId, title, members } = action.payload;
+      const { chatId, title, members, image } = action.payload;
 
       return {
         ...state,
         chats: {
           ...state.chats,
           [chatId]: {
-            title
+            title,
+            image
           }
         },
         members: {

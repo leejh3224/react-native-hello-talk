@@ -8,7 +8,8 @@ import {
   Platform,
   Dimensions,
   TouchableOpacity,
-  SectionList
+  SectionList,
+  Keyboard
 } from "react-native";
 import * as firebase from "firebase";
 import { NavigationScreenProps } from "react-navigation";
@@ -170,6 +171,8 @@ class ChatRoom extends React.Component<Props, State> {
 
     // clear the message
     this.handleChangeText("");
+
+    Keyboard.dismiss();
   };
 
   handleRenderRow = ({ item }: { item: IMessage }) => {
@@ -332,6 +335,7 @@ class ChatRoom extends React.Component<Props, State> {
           renderItem={this.handleRenderRow}
           keyExtractor={item => Number(item.timestamp).toString()}
           ListHeaderComponent={this.handlerRenderListHeader}
+          keyboardShouldPersistTaps="handled"
         />
         {this.state.uploadMenuBarVisible && (
           <View style={styles.uploadMenuBarContainer}>

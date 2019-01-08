@@ -57,7 +57,7 @@ class ChatCreate extends React.Component<
 
     // filter out user if he already exists in the queue
     // otherwise push him into the queue
-    const newUsers = selected.includes(user)
+    const newUsers = selected.some(selectedUser => selectedUser.id === user.id)
       ? selected.filter((item: User) => item.id !== user.id)
       : [...selected, user];
 
@@ -119,16 +119,15 @@ class ChatCreate extends React.Component<
             margin: 16
           }}
           overlay={
-            selected.includes(item) && (
-              <View style={styles.overlay}>
-                <MaterialCommunityIcons
-                  name="check"
-                  size={32}
-                  color={colors.white}
-                />
-              </View>
-            )
+            <View style={styles.overlay}>
+              <MaterialCommunityIcons
+                name="check"
+                size={32}
+                color={colors.white}
+              />
+            </View>
           }
+          overlayVisible={selected.some(user => user.id === item.id)}
         />
         <View style={styles.contentContainer}>
           <View>
@@ -220,7 +219,7 @@ class ChatCreate extends React.Component<
         justifyContent: "center",
         alignItems: "center",
         position: "relative",
-        left: 50,
+        left: 45,
         top: -5
       }
     });
@@ -251,6 +250,7 @@ class ChatCreate extends React.Component<
                   />
                 </TouchableOpacity>
               }
+              overlayVisible={true}
             />
           ))}
           <Image
@@ -270,6 +270,8 @@ class ChatCreate extends React.Component<
         <FlatList<User>
           data={this.filterByKeyword(users)}
           renderItem={this.handleRenderRow}
+          /* https://stackoverflow.com/questions/46994262/how-to-update-a-single-item-in-flatlist-in-react-native */
+          extraData={this.state.selected}
           keyExtractor={(user, index) => `${user.name}-${index}`}
         />
       </View>

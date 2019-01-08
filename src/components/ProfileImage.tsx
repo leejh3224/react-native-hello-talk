@@ -7,15 +7,17 @@ interface Props {
   size: number;
   country?: string;
   containerStyle?: ViewStyle;
-  overlay?: React.ReactNode | undefined;
+  overlay?: React.ReactNode;
+  overlayVisible?: boolean;
 }
 
-const Profile: React.SFC<Props> = ({
+const ProfileImage: React.SFC<Props> = ({
   uri,
   size,
   country,
   overlay,
-  containerStyle
+  containerStyle,
+  overlayVisible
 }) => {
   const styles = StyleSheet.create({
     container: {
@@ -42,11 +44,11 @@ const Profile: React.SFC<Props> = ({
         style={styles.image}
         imageStyle={{ borderRadius: size / 2 }}
       >
-        {overlay}
+        {overlayVisible && overlay}
       </ImageBackground>
       {country && <Flag code={country} style={styles.flag} />}
     </View>
   );
 };
 
-export default Profile;
+export default ProfileImage;

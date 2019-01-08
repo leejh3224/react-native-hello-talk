@@ -193,3 +193,41 @@ Now you don't have to use `keyboardListener` or manually scroll down the list.
 	</View>
 </View>
 ```
+
+## Array.includes vs Array.some/find
+
+`Array.includes` does shallow equality check or in simple words, it checks whether they have same memory address(reference).
+
+so, it is not suitable for comparing equality of array containing objects.
+
+In those cases, you can use `Array.some` or `Array.find`.
+
+## Update ListItem props based on state
+
+FlatList Items implements `PureComponents`, so it does not re-render when non prop value changes(i.e. React state).
+
+But in some cases we need to re render (update) items inside FlatList based on certain values.
+
+For example, when user likes post or user select an item.
+
+So we need our list to listen to change of certain value.
+
+We can use `extraData` property of FlatList to listen to the change of value change.
+
+```js
+<FlatList
+...
+    extraData={this.state}
+    data={this.state.posts}
+    renderItem={this.renderPost}
+    ...
+/>
+```
+
+[reference] https://stackoverflow.com/questions/46994262/how-to-update-a-single-item-in-flatlist-in-react-native
+
+## Control Keyboard tap interaction for TextInput inside FlatList
+
+Use `keyboardShouldPersistTaps="handled"` and manually dismiss `Keyboard` with `Keyboard.dismiss()` when user touches submit button.
+
+[reference] https://stackoverflow.com/questions/45834287/when-textinput-focused-first-touch-on-flatlist-doesnt-work-however-the-second/45834865
