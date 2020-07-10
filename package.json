@@ -13,7 +13,7 @@
 		"open:debugger": "rndebugger-open --open --port 19001"
 	},
 	"dependencies": {
-		"expo": "^31.0.2",
+		"expo": "^34.0.1",
 		"firebase": "^5.7.0",
 		"formik": "^1.4.1",
 		"intl": "^1.2.5",
