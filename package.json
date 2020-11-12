@@ -14,7 +14,7 @@
 	},
 	"dependencies": {
 		"expo": "^31.0.2",
-		"firebase": "^5.7.0",
+		"firebase": "^7.14.0",
 		"formik": "^1.4.1",
 		"intl": "^1.2.5",
 		"lodash.get": "^4.4.2",
