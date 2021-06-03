@@ -24,7 +24,7 @@
 		"material-colors": "^1.2.6",
 		"react": "16.5.0",
 		"react-dom": "^16.6.3",
-		"react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
+		"react-native": "0.64.1",
 		"react-native-easy-toast": "^1.1.0",
 		"react-native-modal": "^7.0.2",
 		"react-native-popup-menu": "^0.14.2",
